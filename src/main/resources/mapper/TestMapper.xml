@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nive.prjt.nive.myBatisTest.mapper.TestMapper"> <!--yml에서 alias 설정을 통해 줄일 수 있음.-->
+
+    <!-- SELECT List -->
+    <select id="findAll" resultType="TestDomain">
+        SELECT tb_idx, nm as name FROM test_tb
+        WHERE 1=1
+        <if test="testSearch != '' and testSearch != null">
+            AND tb_idx = #{testSearch}
+        </if>
+    </select>
+
+    <!-- SELECT by tb_idx -->
+    <select id="findById" resultType="TestDomain">
+        SELECT tb_idx, nm as name  FROM test_tb WHERE tb_idx = #{tbIdx}
+    </select>
+
+    <!-- INSERT -->
+    <insert id="insertTest" parameterType="com.nive.prjt.nive.myBatisTest.domain.TestDomain" useGeneratedKeys="true" keyProperty="tbIdx">
+        INSERT INTO test_tb (tb_idx, nm)
+        VALUES (#{tbIdx}, #{name})
+    </insert>
+
+    <!-- UPDATE -->
+    <update id="updateTest">
+        UPDATE test_tb
+        SET nm = #{name}
+        WHERE tb_idx = #{tbIdx}
+    </update>
+
+    <!-- DELETE -->
+    <delete id="deleteTest">
+        DELETE FROM test_tb WHERE tb_idx = #{tbIdx}
+    </delete>
+
+</mapper>
