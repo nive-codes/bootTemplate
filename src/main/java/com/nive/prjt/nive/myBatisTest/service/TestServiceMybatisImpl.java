@@ -2,27 +2,45 @@ package com.nive.prjt.nive.myBatisTest.service;
 
 import com.nive.prjt.nive.myBatisTest.domain.TestDomain;
 import com.nive.prjt.nive.myBatisTest.mapper.TestMapper;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
+@Transactional
 public class TestServiceMybatisImpl implements TestService {
 
     private final TestMapper testMapper;
 
-    /*생성자를 통한 testMapper 주입, 한개인 경우 @Autowired 생략 가능*/
-    @Autowired
-    public TestServiceMybatisImpl(TestMapper testMapper) {
-        this.testMapper = testMapper;
-    }
+
+//    @Autowired
+//    public TestServiceMybatisImpl(TestMapper testMapper) {
+//        this.testMapper = testMapper;
+//    }
 
     @Override
     public void insertTest(TestDomain testDomain) {
-        System.out.println("TestDomain.insertTest name= "+testDomain.getName());
-        System.out.println("TestDomain.insertTest idx = "+testDomain.getTbIdx());
+        log.debug("TestDomain.insertTest nm= "+testDomain.getNm());
+
+        boolean sameNm = testMapper.existsByNm(testDomain.getNm());
+
+        if (sameNm) {
+            // 중복될 경우 비즈니스 예외 던지기 (예: Custom Exception)
+            throw new IllegalArgumentException("이미 존재하는 이름입니다");
+        }
+
+        // tbIdx 생성 (UUID 기반)
+        String tbIdx = generateCustomId();
+        testDomain.setTbIdx(tbIdx);
+
         testMapper.insertTest(testDomain);
     }
 
@@ -48,4 +66,10 @@ public class TestServiceMybatisImpl implements TestService {
     public List<TestDomain> findAll(TestDomain testDomain) {
         return testMapper.findAll(testDomain);
     }
+
+    private String generateCustomId() {
+        // 원하는 방식으로 고유 Key 생성 (UUID 사용)
+        return "TEST_" + UUID.randomUUID().toString();
+    }
+
 }

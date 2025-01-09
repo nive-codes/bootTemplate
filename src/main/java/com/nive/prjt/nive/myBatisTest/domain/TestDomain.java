@@ -13,7 +13,11 @@ import lombok.Setter;
 public class TestDomain {
 
     private String tbIdx;
-    private String name;
+
+    private String nm;
+
+
     private String testSearch;
+
 
 }

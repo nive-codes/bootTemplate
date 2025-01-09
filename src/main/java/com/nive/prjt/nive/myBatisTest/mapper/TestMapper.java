@@ -2,6 +2,7 @@ package com.nive.prjt.nive.myBatisTest.mapper;
 
 import com.nive.prjt.nive.myBatisTest.domain.TestDomain;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -19,6 +20,11 @@ public interface TestMapper {
     List<TestDomain> findAll(TestDomain testDomain);
 
     TestDomain findById(String tb_idx);
+
+    @Select("SELECT COUNT(1) > 0 FROM test_tb WHERE nm = #{nm}")
+    boolean existsByNm(String nm);
+
+
 
 
 }
