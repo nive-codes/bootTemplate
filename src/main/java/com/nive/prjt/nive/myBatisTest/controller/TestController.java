@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * [클래스 역할 간략 설명]
  *
- * @author hosikchoi
+ * @author nive
  * @desc thymeleaf 활용
  * @since 2025-01-08
  */
@@ -41,16 +41,7 @@ public class TestController {
             model.addAttribute("errorMessage", bindingResult.getAllErrors().get(0).getDefaultMessage());
             return "test/testNew";
         }
-
-        try{
-            testService.insertTest(testDomain);
-        } catch (IllegalArgumentException e){
-            model.addAttribute("errorMessage", e.getMessage());
-            return "test/testNew";
-        } catch (Exception e){
-            model.addAttribute("errorMessage", e.getMessage());
-            return "test/testNew";
-        }
+        testService.insertTest(testDomain);
 
         return "redirect:/test/testList";
     }

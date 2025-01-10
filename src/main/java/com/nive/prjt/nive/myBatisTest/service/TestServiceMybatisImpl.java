@@ -1,5 +1,6 @@
 package com.nive.prjt.nive.myBatisTest.service;
 
+import com.nive.prjt.exception.business.BusinessException;
 import com.nive.prjt.nive.myBatisTest.domain.TestDomain;
 import com.nive.prjt.nive.myBatisTest.mapper.TestMapper;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +34,9 @@ public class TestServiceMybatisImpl implements TestService {
         boolean sameNm = testMapper.existsByNm(testDomain.getNm());
 
         if (sameNm) {
-            // 중복될 경우 비즈니스 예외 던지기 (예: Custom Exception)
-            throw new IllegalArgumentException("이미 존재하는 이름입니다");
+//            throw new IllegalArgumentException("이미 존재하는 이름입니다");
+            throw new BusinessException("이미 존재하는 이름입니다 - BusinessException", "/test/testNew");
+
         }
 
         // tbIdx 생성 (UUID 기반)
