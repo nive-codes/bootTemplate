@@ -43,7 +43,7 @@ public class TestController {
         }
         testService.insertTest(testDomain);
 
-        return "redirect:/test/testList";
+        return "redirect:/test/list";
     }
 
     @GetMapping("/list")

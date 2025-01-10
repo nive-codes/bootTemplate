@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.NoSuchElementException;
 
@@ -84,6 +85,20 @@ public class GlobalsExceptionHandler {
         return "error/400";  // 400 페이지로 이동
     }
 
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleNoResourceFoundException(NoResourceFoundException ex, Model model) {
+        if (ex.getMessage().contains("favicon.ico")) {
+            log.warn("favicon.ico 리소스가 존재하지 않습니다. 예외를 무시합니다.");
+            return null;  // 예외를 무시하고 아무것도 반환하지 않음
+        }
+
+        log.error("NoResourceFoundException 발생: {}", ex.getMessage(), ex);  // 오류 레벨로 로그 출력
+        model.addAttribute("errorMessage", "리소스를 찾을 수 없습니다.");
+        return "error/400";  // 400 에러 페이지로 이동
+    }
+
     // 최종 에러 처리
     @ExceptionHandler(Exception.class)
     public String handleException(Exception ex, Model model) {
@@ -91,4 +106,6 @@ public class GlobalsExceptionHandler {
         model.addAttribute("errorMessage", "알 수 없는 오류가 발생했습니다.");
         return "error/500"; // 공통 에러 페이지
     }
+
+
 }

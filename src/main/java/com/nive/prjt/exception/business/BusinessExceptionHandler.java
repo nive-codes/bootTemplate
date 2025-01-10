@@ -23,13 +23,4 @@ public class BusinessExceptionHandler {
         model.addAttribute("errorMessage", ex.getMessage());
         return ex.getReturnView();  // 예외에서 지정한 뷰로 이동
     }
-
-
-    // 비즈니스 로직에서의 기타 예외 처리
-    @ExceptionHandler(Exception.class)
-    public String handleGenericException(Exception ex, Model model) {
-        log.error("Exception 발생 : "+ex.getMessage(), ex);
-        model.addAttribute("errorMessage", "알 수 없는 오류가 발생했습니다.");
-        return "error/500";  // 500 페이지로 이동
-    }
 }
