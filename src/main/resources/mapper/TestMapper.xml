@@ -7,7 +7,8 @@
         SELECT tb_idx, nm  FROM test_tb
         WHERE 1=1
         <if test="testSearch != '' and testSearch != null">
-            AND tb_idx = #{testSearch}
+            AND (tb_idx like concat('%',#{testSearch},'%')
+                OR nm like concat('%',#{testSearch},'%'))
         </if>
     </select>
 

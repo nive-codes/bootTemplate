@@ -64,6 +64,7 @@ public class TestServiceMybatisImpl implements TestService {
 
     @Override
     public List<TestDomain> findAll(TestDomain testDomain) {
+        log.debug("TestDomain.findAll testDomain.testSearch="+ testDomain.getTestSearch());
         return testMapper.findAll(testDomain);
     }
 

@@ -4,6 +4,7 @@
 <div class="container">
     <form action="/test/save" method="post">
         <div class="form-group">
+            <strong style="color: red " th:text="${errorMessage}"/>
             <label for="nm">이름</label>
             <input type="text" id="nm" name="nm" placeholder="이름을 입력하세요">
         </div>

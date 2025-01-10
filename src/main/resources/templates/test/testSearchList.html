@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="container">
+    <form action="/test/searchList" method="get">
+        <input type="text"  name="testSearch" placeholder="검색어를 입력해주세요" th:value="${searchForm.testSearch}">
+        <button type="submit">검색</button>
+
+    </form>
+    <div>
+        <table>
+            <thead>
+            <tr>
+                <th>PK</th>
+                <th>이름</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="result : ${list}">
+                <td th:text="${result.tbIdx}"></td>
+                <td th:text="${result.nm}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div> <!-- /container -->
+</body>
+</html>
