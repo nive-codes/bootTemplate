@@ -8,6 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * [클래스 역할 간략 설명]
+ *
+ * @author nive
+ * @desc rest api (ResponseEntity) 용 module 작성
+ * @since 2025-01-11
+ */
 @RestController
 @RequestMapping("/testApi")
 @RequiredArgsConstructor
