@@ -1,6 +1,5 @@
 package com.nive.prjt.nive.myBatisTest.service;
 
-import com.nive.prjt.exception.business.BusinessException;
 import com.nive.prjt.exception.business.BusinessRestException;
 import com.nive.prjt.nive.myBatisTest.domain.TestDomain;
 import com.nive.prjt.nive.myBatisTest.mapper.TestMapper;
@@ -24,8 +23,9 @@ public class TestRestServiceMybatisImpl implements TestRestService {
 
     @Override
     public ResponseEntity<String> insertTest(TestDomain testDomain) {
-        log.debug("TestDomain.insertTest nm= " + testDomain.getNm());
+        log.debug("TestDomain.insertTest nm={}", testDomain.getNm());
 
+        // 비즈니스 규칙: 이름은 중복될 수 없습니다.
         boolean sameNm = testMapper.existsByNm(testDomain.getNm());
         if (sameNm) {
             throw new BusinessRestException("이미 존재하는 이름입니다.", "DUPLICATE");
@@ -40,7 +40,9 @@ public class TestRestServiceMybatisImpl implements TestRestService {
         return ResponseEntity.status(HttpStatus.CREATED).body("Test Insert ID: " + tbIdx);
     }
 
+
     @Override
+    @Transactional(readOnly = true) /*데이터 변경 작업이 없다는 보증을 제공*/
     public ResponseEntity<TestDomain> getTest(String tbIdx) {
         TestDomain result = testMapper.findById(tbIdx);
         return ResponseEntity.ok(result);
@@ -71,7 +73,7 @@ public class TestRestServiceMybatisImpl implements TestRestService {
 
     @Override
     public ResponseEntity<Object> findAll(TestDomain testDomain) {
-        log.debug("TestDomain.findAll testDomain.testSearch=" + testDomain.getTestSearch());
+        log.debug("TestDomain.findAll testSearch={}", testDomain.getTestSearch());
 
         if (testDomain.getTestSearch() != null && testDomain.getTestSearch().trim().isEmpty()) {
             return ResponseEntity.badRequest().body("잘못된 검색어입니다.");
