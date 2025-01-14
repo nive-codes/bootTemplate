@@ -1,4 +1,4 @@
-package com.nive.prjt.exception.business;
+package com.nive.prjt.config.exception.business;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ui.Model;

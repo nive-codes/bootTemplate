@@ -1,4 +1,4 @@
-package com.nive.prjt.exception.business;
+package com.nive.prjt.config.exception.business;
 
 /**
  * @author nive

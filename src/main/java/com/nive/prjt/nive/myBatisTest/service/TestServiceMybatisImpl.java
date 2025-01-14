@@ -1,11 +1,10 @@
 package com.nive.prjt.nive.myBatisTest.service;
 
-import com.nive.prjt.exception.business.BusinessException;
+import com.nive.prjt.config.exception.business.BusinessException;
 import com.nive.prjt.nive.myBatisTest.domain.TestDomain;
 import com.nive.prjt.nive.myBatisTest.mapper.TestMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

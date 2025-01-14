@@ -1,4 +1,4 @@
-package com.nive.prjt.exception.globals;
+package com.nive.prjt.config.exception.globals;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.HttpMessageNotReadableException;
