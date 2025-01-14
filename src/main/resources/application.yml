@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: mvc  # "mvc" 또는 "rest"로 설정 핸들러 처리 (@Controller에서의 service를 요청해도 RestControllerAdvice의 Exception동작할 때가 있으므로 지정해서 활용)
   datasource:
     url: jdbc:h2:tcp://localhost/~/test
     driver-class-name: org.h2.Driver

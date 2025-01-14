@@ -2,6 +2,7 @@ package com.nive.prjt.nive.myBatisTest.controller;
 
 import com.nive.prjt.nive.myBatisTest.domain.TestDomain;
 import com.nive.prjt.nive.myBatisTest.service.TestService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/test")
+@Tag(name = "예제 API", description = "Swagger 테스트용 API")
 public class TestController {
 
     private final TestService testService;

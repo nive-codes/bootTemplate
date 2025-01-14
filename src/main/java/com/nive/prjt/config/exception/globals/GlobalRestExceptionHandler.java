@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
  */
 @RestControllerAdvice
 @Slf4j
+@Profile("rest")
 public class GlobalRestExceptionHandler {
 
     // 404 Not Found: 리소스를 찾을 수 없는 경우

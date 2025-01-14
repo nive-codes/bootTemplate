@@ -1,6 +1,7 @@
 package com.nive.prjt.config.exception.globals;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -21,6 +22,7 @@ import java.util.NoSuchElementException;
  */
 @ControllerAdvice
 @Slf4j
+@Profile("mvc")
 public class GlobalsExceptionHandler {
     // 404 Not Found: 리소스를 찾을 수 없는 경우
     @ExceptionHandler(NoSuchElementException.class)

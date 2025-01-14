@@ -1,6 +1,7 @@
 package com.nive.prjt.nive.myBatisTest.service;
 
 import com.nive.prjt.config.exception.business.BusinessRestException;
+import com.nive.prjt.config.response.SuccessResponse;
 import com.nive.prjt.nive.myBatisTest.domain.TestDomain;
 import com.nive.prjt.nive.myBatisTest.mapper.TestMapper;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ public class TestRestServiceMybatisImpl implements TestRestService {
     private final TestMapper testMapper;
 
     @Override
-    public ResponseEntity<String> insertTest(TestDomain testDomain) {
+    public ResponseEntity<SuccessResponse> insertTest(TestDomain testDomain) {
 
         // 비즈니스 규칙: 이름은 중복될 수 없습니다.
         boolean sameNm = testMapper.existsByNm(testDomain.getNm());
@@ -36,8 +37,8 @@ public class TestRestServiceMybatisImpl implements TestRestService {
         testDomain.setTbIdx(tbIdx);
 
         testMapper.insertTest(testDomain);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body("Test Insert ID: " + tbIdx);
+        SuccessResponse successResponse = new SuccessResponse<>(HttpStatus.CREATED.toString(), "Test Insert ID: " + tbIdx, tbIdx);
+        return ResponseEntity.status(HttpStatus.CREATED).body(successResponse);
         /*중요 정보인 경우 return 방지 후 messages 전달*/
 //        return ResponseEntity.status(HttpStatus.CREATED).body("회원가입이 완료되었습니다.");
     }
@@ -45,29 +46,28 @@ public class TestRestServiceMybatisImpl implements TestRestService {
 
     @Override
     @Transactional(readOnly = true) /*데이터 변경 작업이 없다는 보증을 제공*/
-    public ResponseEntity<TestDomain> getTest(String tbIdx) {
+    public ResponseEntity<SuccessResponse> getTest(String tbIdx) {
         TestDomain result = testMapper.findById(tbIdx);
 
         if (result == null) {
             throw new BusinessRestException("존재하지 않는 TEST 데이터 입니다.", "NOT_FOUND", HttpStatus.NOT_FOUND);
         }
-
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(new SuccessResponse<>(HttpStatus.OK.toString(), "Test data found.", result));
     }
 
     @Override
-    public ResponseEntity<String> deleteTest(String tbIdx) {
+    public ResponseEntity<SuccessResponse> deleteTest(String tbIdx) {
         TestDomain existingTest = testMapper.findById(tbIdx);
         if (existingTest == null) {
             throw new BusinessRestException("존재하지 않는 TEST 데이터 입니다.", "NOT_FOUND",HttpStatus.NOT_FOUND);
         }
 
         testMapper.deleteTest(tbIdx);
-        return ResponseEntity.ok("Test with ID: " + tbIdx + " delete completed.");
+        return ResponseEntity.ok(new SuccessResponse<>(HttpStatus.OK.toString(), "Data deleted"));
     }
 
     @Override
-    public ResponseEntity<String> updateTest(String tbIdx, TestDomain testDomain) {
+    public ResponseEntity<SuccessResponse> updateTest(String tbIdx, TestDomain testDomain) {
         TestDomain existingTest = testMapper.findById(tbIdx);
         if (existingTest == null) {
             throw new BusinessRestException("존재하지 않는 TEST 데이터 입니다.", "NOT_FOUND",HttpStatus.NOT_FOUND);
@@ -75,11 +75,11 @@ public class TestRestServiceMybatisImpl implements TestRestService {
 
         testDomain.setTbIdx(tbIdx);
         testMapper.updateTest(testDomain);
-        return ResponseEntity.ok("Test with ID: " + tbIdx + " updated completed.");
+        return ResponseEntity.ok(new SuccessResponse<>(HttpStatus.OK.toString(), "Data updated",testDomain));
     }
 
     @Override
-    public ResponseEntity<Object> findAll(TestDomain testDomain) {
+    public ResponseEntity<SuccessResponse> findAll(TestDomain testDomain) {
         log.debug("TestDomain.findAll testSearch={}", testDomain.getTestSearch());
 
         if (testDomain.getTestSearch() != null && testDomain.getTestSearch().trim().isEmpty()) {
@@ -87,7 +87,7 @@ public class TestRestServiceMybatisImpl implements TestRestService {
 //            return ResponseEntity.badRequest().body("잘못된 검색어입니다.");
         }else{
             List<TestDomain> resultList = testMapper.findAll(testDomain);
-            return ResponseEntity.ok(resultList);
+            return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK.toString(),"Data selected",resultList));
         }
     }
     private String generateCustomId() {
