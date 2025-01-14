@@ -38,6 +38,8 @@ public class TestRestServiceMybatisImpl implements TestRestService {
         testMapper.insertTest(testDomain);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Test Insert ID: " + tbIdx);
+        /*중요 정보인 경우 return 방지 후 messages 전달*/
+//        return ResponseEntity.status(HttpStatus.CREATED).body("회원가입이 완료되었습니다.");
     }
 
 

@@ -7,9 +7,11 @@ import com.nive.prjt.nive.myBatisTest.domain.TestDomain;
 import com.nive.prjt.nive.myBatisTest.mapper.TestMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.http.ResponseEntity;
 
@@ -18,7 +20,9 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-
+/*logic을 가정하므로 mock은 validate 체크에 적합*/
+/*단 Mybatis의 mapper 오류는 잡지 못하므로 test case의 재작성이 필요합니다.*/
+@ExtendWith(MockitoExtension.class)
 class TestRestServiceMybatisImplTest {
 
     @Mock
@@ -27,10 +31,10 @@ class TestRestServiceMybatisImplTest {
     @InjectMocks
     private TestRestServiceMybatisImpl testRestService;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+//    @BeforeEach //mock 초기화
+//    void setUp() {
+//        MockitoAnnotations.openMocks(this);
+//    }
 
     @Test
     void insertTest_success() {
@@ -38,15 +42,16 @@ class TestRestServiceMybatisImplTest {
         TestDomain testDomain = new TestDomain();
         testDomain.setNm("Test Name");
 
-         when(testMapper.existsByNm(testDomain.getNm())).thenReturn(false);
+        //입력한 값이 없는 경우 지정(미리 값을 예측)
+        when(testMapper.existsByNm(testDomain.getNm())).thenReturn(false);
 
         // When
         ResponseEntity<String> response = testRestService.insertTest(testDomain);
 
         // Then
-        assertThat(response.getStatusCodeValue()).isEqualTo(201);
+        assertThat(response.getStatusCodeValue()).isEqualTo(201);   //성공 201
         assertThat(response.getBody()).contains("Test Insert ID: TEST_");
-        verify(testMapper, times(1)).insertTest(testDomain);
+        verify(testMapper, times(1)).insertTest(testDomain); //한번 호출되었는지 검증
     }
 
     @Test
@@ -55,17 +60,17 @@ class TestRestServiceMybatisImplTest {
         TestDomain testDomain = new TestDomain();
         testDomain.setNm("Duplicate Name");
 
-        when(testMapper.existsByNm(testDomain.getNm())).thenReturn(true);
+        when(testMapper.existsByNm(testDomain.getNm())).thenReturn(true);   //true인 경우
 
         // When & Then
         BusinessRestException exception = assertThrows(
                 BusinessRestException.class,
                 () -> testRestService.insertTest(testDomain)
-        );
+        );  //Exception 객체
 
-        assertThat(exception.getMessage()).isEqualTo("이미 존재하는 이름입니다.");
-        assertThat(exception.getErrorCode()).isEqualTo("DUPLICATE");
-        verify(testMapper, never()).insertTest(testDomain);
+        assertThat(exception.getMessage()).isEqualTo("이미 존재하는 이름입니다."); //BusinessException예외인지 확인 같은 메시지
+        assertThat(exception.getErrorCode()).isEqualTo("DUPLICATE");    //같은 코드인지
+        verify(testMapper, never()).insertTest(testDomain); //호출되지 않았는지 검증
     }
 
     @Test
