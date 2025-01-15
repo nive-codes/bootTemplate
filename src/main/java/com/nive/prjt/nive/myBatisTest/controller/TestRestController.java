@@ -1,5 +1,6 @@
 package com.nive.prjt.nive.myBatisTest.controller;
 
+import com.nive.prjt.config.response.ApiCode;
 import com.nive.prjt.config.response.SuccessResponse;
 import com.nive.prjt.nive.myBatisTest.domain.TestDomain;
 import com.nive.prjt.nive.myBatisTest.service.TestRestService;
@@ -11,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
+import com.nive.prjt.config.response.ApiResponse;
 /**
  * [클래스 역할 간략 설명]
  *
@@ -31,10 +32,10 @@ public class TestRestController {
     // 데이터 삽입 (POST /testApi)
     @PostMapping
     @Operation(summary = "데이터 등록", description = "test 데이터를 등록합니다.")
-    public ResponseEntity<SuccessResponse> insertTest(@RequestBody @Valid TestDomain testDomain, BindingResult bindingResult) {
+    public ApiResponse insertTest(@RequestBody @Valid TestDomain testDomain, BindingResult bindingResult) {
         // 검증 오류가 있는지 확인
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body(new SuccessResponse(HttpStatus.BAD_REQUEST.toString(),"잘못된 요청입니다."));
+            return ApiResponse.fail(ApiCode.VALIDATION_FAILED);
         }
         return testRestService.insertTest(testDomain);
     }
@@ -42,24 +43,24 @@ public class TestRestController {
     // 데이터 조회 (GET /testApi/{tbIdx})
     @GetMapping("/{tbIdx}")
     @Operation(summary = "데이터를 조회", description = "test 데이터 조회합니다.")
-    public ResponseEntity<SuccessResponse> getTest(@PathVariable String tbIdx) {
+    public ApiResponse getTest(@PathVariable String tbIdx) {
         return testRestService.getTest(tbIdx);
     }
 
     // 데이터 삭제 (DELETE /testApi/{tbIdx})
     @DeleteMapping("/{tbIdx}")
     @Operation(summary = "데이터를 삭제합니다.", description = "test 데이터를 삭제합니다")
-    public ResponseEntity<SuccessResponse> deleteTest(@PathVariable String tbIdx) {
+    public ApiResponse deleteTest(@PathVariable String tbIdx) {
         return testRestService.deleteTest(tbIdx);
     }
 
     // 데이터 수정 (PUT /testApi/{tbIdx})
     @PatchMapping("/{tbIdx}")
     @Operation(summary = "데이터를 수정합니다.", description = "test 데이터를 수정합니다")
-    public ResponseEntity<SuccessResponse> updateTest(@PathVariable String tbIdx, @RequestBody @Valid TestDomain testDomain, BindingResult bindingResult) {
+    public ApiResponse updateTest(@PathVariable String tbIdx, @RequestBody @Valid TestDomain testDomain, BindingResult bindingResult) {
         // 검증 오류가 있는지 확인
         if (bindingResult.hasErrors()) {
-//            return ResponseEntity.badRequest().body("Validation failed: " + bindingResult.getAllErrors().toString());
+            return ApiResponse.fail(ApiCode.VALIDATION_FAILED);
         }
         return testRestService.updateTest(tbIdx, testDomain);
     }
@@ -67,7 +68,7 @@ public class TestRestController {
     // 데이터 전체 조회 (GET /testApi)
     @GetMapping
     @Operation(summary = "전체 데이터 조회", description = "전체 데이터를 조회합니다.")
-    public ResponseEntity<SuccessResponse> findAll(TestDomain testDomain) {
+    public ApiResponse findAll(TestDomain testDomain) {
         return testRestService.findAll(testDomain);
     }
 

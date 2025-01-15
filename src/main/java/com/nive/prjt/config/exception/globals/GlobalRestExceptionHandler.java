@@ -1,18 +1,12 @@
 package com.nive.prjt.config.exception.globals;
 
-import com.nive.prjt.config.exception.ErrorCode;
-import com.nive.prjt.config.response.ErrorResponse;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import com.nive.prjt.config.response.ApiCode;
+import com.nive.prjt.config.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -27,6 +21,7 @@ import java.util.stream.Collectors;
  * @author nive
  * @class GlobalRestExceptionHandler
  * @desc 공통된 오류코드 처리 + all Exception 처리 포함 (REST API)
+ * ErrorResponse -> ApiResponse 수정 (25.01.15)
  * @since 2025-01-10
  */
 @RestControllerAdvice
@@ -34,84 +29,76 @@ import java.util.stream.Collectors;
 @Profile("rest")
 public class GlobalRestExceptionHandler {
 
+
     // 404 Not Found: 리소스를 찾을 수 없는 경우
     @ExceptionHandler(NoSuchElementException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<Object> handleNotFoundException(NoSuchElementException ex) {
-        log.warn("리소스를 찾을 수 없습니다: {}", ex.getMessage());  // WARN 레벨로 로그
-        return new ResponseEntity<>(new ErrorResponse(ErrorCode.NOT_FOUND.getCode(), ErrorCode.NOT_FOUND.getMessage()), ErrorCode.NOT_FOUND.getStatus());
+    public ApiResponse<?> handleNotFoundException(NoSuchElementException ex) {
+        log.warn("리소스를 찾을 수 없습니다: {}", ex.getMessage());
+        return ApiResponse.fail(ApiCode.NOT_FOUND);
     }
 
-    // 400 Bad Request: 입력값이 잘못된 경우 (예: 유효성 검사 실패)
+    // 400 Bad Request: 입력값이 잘못된 경우 (유효성 검사 실패)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Object> handleValidationException(MethodArgumentNotValidException ex) {
+    public ApiResponse<?> handleValidationException(MethodArgumentNotValidException ex) {
         List<String> errorMessages = ex.getBindingResult()
                 .getAllErrors()
                 .stream()
                 .map(error -> ((FieldError) error).getDefaultMessage())
                 .collect(Collectors.toList());
-        log.warn("입력값 검증 실패: {}", errorMessages);  // WARN 레벨로 로그
-        return new ResponseEntity<>(new ErrorResponse(ErrorCode.VALIDATION_FAILED.getCode(), ErrorCode.VALIDATION_FAILED.getMessage(), Map.of("errors", errorMessages)), ErrorCode.VALIDATION_FAILED.getStatus());
+        log.warn("입력값 검증 실패: {}", errorMessages);
+        return ApiResponse.fail(ApiCode.VALIDATION_FAILED, Map.of("errors", errorMessages));
     }
 
-    // 400 Bad Request: 요청이 잘못된 포맷으로 들어온 경우 (예: JSON 포맷 오류)
+    // 400 Bad Request: 요청이 잘못된 포맷으로 들어온 경우
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Object> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
-        log.warn("잘못된 메시지 포맷: {}", ex.getMessage());  // WARN 레벨로 로그
-        return new ResponseEntity<>(new ErrorResponse(ErrorCode.INVALID_FORMAT.getCode(), ErrorCode.INVALID_FORMAT.getMessage()), ErrorCode.INVALID_FORMAT.getStatus());
+    public ApiResponse<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        log.warn("잘못된 메시지 포맷: {}", ex.getMessage());
+        return ApiResponse.fail(ApiCode.INVALID_FORMAT);
     }
 
-    // 404 Not Found: 자원 미존재 (예: URL 경로가 틀린 경우)
+    // 404 Not Found: 자원 미존재
     @ExceptionHandler(NoHandlerFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<Object> handleResourceNotFoundException(NoHandlerFoundException ex) {
-        log.warn("잘못된 경로 요청: {}", ex.getMessage());  // WARN 레벨로 로그
-        return new ResponseEntity<>(new ErrorResponse(ErrorCode.NOT_FOUND.getCode(), ErrorCode.NOT_FOUND.getMessage()), ErrorCode.NOT_FOUND.getStatus());
+    public ApiResponse<?> handleResourceNotFoundException(NoHandlerFoundException ex) {
+        log.warn("잘못된 경로 요청: {}", ex.getMessage());
+        return ApiResponse.fail(ApiCode.NOT_FOUND);
     }
 
     // 400 Bad Request: Null 값이 잘못 사용된 경우
     @ExceptionHandler(NullPointerException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Object> handleNullPointerException(NullPointerException ex) {
-        log.error("NullPointerException 발생: {}", ex.getMessage(), ex);  // ERROR 레벨로 로그
-        return new ResponseEntity<>(new ErrorResponse(ErrorCode.NULL_POINTER.getCode(), ErrorCode.NULL_POINTER.getMessage()), ErrorCode.NULL_POINTER.getStatus());
+    public ApiResponse<?> handleNullPointerException(NullPointerException ex) {
+        log.error("NullPointerException 발생: {}", ex.getMessage(), ex);
+        return ApiResponse.fail(ApiCode.NULL_POINTER);
     }
 
     // 400 Bad Request: 배열 인덱스 범위 초과
     @ExceptionHandler(IndexOutOfBoundsException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Object> handleIndexOutOfBoundsException(IndexOutOfBoundsException ex) {
-        log.error("IndexOutOfBoundsException 발생: {}", ex.getMessage(), ex);  // ERROR 레벨로 로그
-        return new ResponseEntity<>(new ErrorResponse(ErrorCode.INDEX_OUT_OF_BOUNDS.getCode(), ErrorCode.INDEX_OUT_OF_BOUNDS.getMessage()), ErrorCode.INDEX_OUT_OF_BOUNDS.getStatus());
+    public ApiResponse<?> handleIndexOutOfBoundsException(IndexOutOfBoundsException ex) {
+        log.error("IndexOutOfBoundsException 발생: {}", ex.getMessage(), ex);
+        return ApiResponse.fail(ApiCode.INDEX_OUT_OF_BOUNDS);
     }
 
-    // 400 Bad Request: 숫자 계산 오류 (예: 0으로 나누기)
+    // 400 Bad Request: 숫자 계산 오류
     @ExceptionHandler(ArithmeticException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Object> handleArithmeticException(ArithmeticException ex) {
-        log.error("ArithmeticException 발생: {}", ex.getMessage(), ex);  // ERROR 레벨로 로그
-        return new ResponseEntity<>(new ErrorResponse(ErrorCode.ARITHMETIC_ERROR.getCode(), ErrorCode.ARITHMETIC_ERROR.getMessage()), ErrorCode.ARITHMETIC_ERROR.getStatus());
+    public ApiResponse<?> handleArithmeticException(ArithmeticException ex) {
+        log.error("ArithmeticException 발생: {}", ex.getMessage(), ex);
+        return ApiResponse.fail(ApiCode.ARITHMETIC_ERROR);
     }
 
     // 400 Bad Request: 리소스를 찾을 수 없는 경우 (특정 favicon.ico 관련)
     @ExceptionHandler(NoResourceFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Object> handleNoResourceFoundException(NoResourceFoundException ex) {
+    public ApiResponse<?> handleNoResourceFoundException(NoResourceFoundException ex) {
         if (ex.getMessage().contains("favicon.ico")) {
             log.warn("favicon.ico 리소스가 존재하지 않습니다. 예외를 무시합니다.");
-            return new ResponseEntity<>(new ErrorResponse(ErrorCode.INVALID_FORMAT.getCode(), ErrorCode.INVALID_FORMAT.getMessage()), ErrorCode.INVALID_FORMAT.getStatus());
+            return ApiResponse.fail(ApiCode.INVALID_FORMAT);
         }
-
-        log.error("NoResourceFoundException 발생: {}", ex.getMessage(), ex);  // ERROR 레벨로 로그 출력
-        return new ResponseEntity<>(new ErrorResponse(ErrorCode.INVALID_FORMAT.getCode(), ErrorCode.INVALID_FORMAT.getMessage()), ErrorCode.INVALID_FORMAT.getStatus());
+        log.error("NoResourceFoundException 발생: {}", ex.getMessage(), ex);
+        return ApiResponse.fail(ApiCode.INVALID_FORMAT);
     }
 
     // 최종 에러 처리
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleException(Exception ex) {
-        log.error("예외 발생: {}", ex.getMessage(), ex);  // ERROR 레벨로 로그
-        return new ResponseEntity<>(new ErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR.getCode(), ErrorCode.INTERNAL_SERVER_ERROR.getMessage()), ErrorCode.INTERNAL_SERVER_ERROR.getStatus());
+    public ApiResponse<?> handleException(Exception ex) {
+        log.error("예외 발생: {}", ex.getMessage(), ex);
+        return ApiResponse.fail(ApiCode.INTERNAL_SERVER_ERROR);
     }
 }

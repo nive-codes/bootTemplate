@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * @author hosikchoi
+ * @author nive
  * @class SuccessResponse
  * @desc 성공시 return response 처리
  * @since 2025-01-14

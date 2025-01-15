@@ -1,7 +1,8 @@
 package com.nive.prjt.nive.myBatisTest.service;
 
 import com.nive.prjt.config.exception.business.BusinessRestException;
-import com.nive.prjt.config.response.SuccessResponse;
+import com.nive.prjt.config.response.ApiCode;
+import com.nive.prjt.config.response.ApiResponse;
 import com.nive.prjt.nive.myBatisTest.domain.TestDomain;
 import com.nive.prjt.nive.myBatisTest.mapper.TestMapper;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +24,16 @@ public class TestRestServiceMybatisImpl implements TestRestService {
     private final TestMapper testMapper;
 
     @Override
-    public ResponseEntity<SuccessResponse> insertTest(TestDomain testDomain) {
+    public ApiResponse insertTest(TestDomain testDomain) {
 
         // 비즈니스 규칙: 이름은 중복될 수 없습니다.
         boolean sameNm = testMapper.existsByNm(testDomain.getNm());
         if (sameNm) {
-            log.error("Duplicate name attempt: {}", testDomain.getNm());
-            throw new BusinessRestException("이미 존재하는 이름입니다.", "DUPLIATE",HttpStatus.CONFLICT);
+            log.warn("Duplicate name attempt: {}", testDomain.getNm());
+            // 비즈니스 로직 중 검증이므로 Exception이 아닌 ApiResponse를 통해 fail 메서드를 return
+            //            throw new BusinessRestException("이미 존재하는 이름입니다.", "DUPLIATE",HttpStatus.CONFLICT);
+            return ApiResponse.fail(ApiCode.SAME_DATA,testDomain);
+
         }
 
         // tbIdx 생성 (UUID 기반)
@@ -37,37 +41,38 @@ public class TestRestServiceMybatisImpl implements TestRestService {
         testDomain.setTbIdx(tbIdx);
 
         testMapper.insertTest(testDomain);
-        SuccessResponse successResponse = new SuccessResponse<>(HttpStatus.CREATED.toString(), "Test Insert ID: " + tbIdx, tbIdx);
-        return ResponseEntity.status(HttpStatus.CREATED).body(successResponse);
-        /*중요 정보인 경우 return 방지 후 messages 전달*/
-//        return ResponseEntity.status(HttpStatus.CREATED).body("회원가입이 완료되었습니다.");
+        return ApiResponse.ok(ApiCode.SUCCESS);
+
     }
 
 
     @Override
     @Transactional(readOnly = true) /*데이터 변경 작업이 없다는 보증을 제공*/
-    public ResponseEntity<SuccessResponse> getTest(String tbIdx) {
+    public ApiResponse getTest(String tbIdx) {
         TestDomain result = testMapper.findById(tbIdx);
-
+        /*TEST데이터가 있으므로 요청이 왔지만 없으므로 예외 처리*/
         if (result == null) {
-            throw new BusinessRestException("존재하지 않는 TEST 데이터 입니다.", "NOT_FOUND", HttpStatus.NOT_FOUND);
+            throw new BusinessRestException("존재하지 않는 TEST 데이터 입니다.","NOT_FOUND",HttpStatus.NOT_FOUND);
+//            return ApiResponse.fail(ApiCode.VALIDATION_FAILED);
         }
-        return ResponseEntity.ok(new SuccessResponse<>(HttpStatus.OK.toString(), "Test data found.", result));
+        return ApiResponse.ok(result);
+
     }
 
     @Override
-    public ResponseEntity<SuccessResponse> deleteTest(String tbIdx) {
+    public ApiResponse deleteTest(String tbIdx) {
         TestDomain existingTest = testMapper.findById(tbIdx);
+        /*TEST데이터가 있으므로 요청이 왔지만 없으므로 예외 처리*/
         if (existingTest == null) {
-            throw new BusinessRestException("존재하지 않는 TEST 데이터 입니다.", "NOT_FOUND",HttpStatus.NOT_FOUND);
+            throw new BusinessRestException("존재하지 않는 TEST 데이터 입니다.","NOT_FOUND",HttpStatus.NOT_FOUND);
         }
 
         testMapper.deleteTest(tbIdx);
-        return ResponseEntity.ok(new SuccessResponse<>(HttpStatus.OK.toString(), "Data deleted"));
+        return ApiResponse.ok("삭제되었습니다.");
     }
 
     @Override
-    public ResponseEntity<SuccessResponse> updateTest(String tbIdx, TestDomain testDomain) {
+    public ApiResponse updateTest(String tbIdx, TestDomain testDomain) {
         TestDomain existingTest = testMapper.findById(tbIdx);
         if (existingTest == null) {
             throw new BusinessRestException("존재하지 않는 TEST 데이터 입니다.", "NOT_FOUND",HttpStatus.NOT_FOUND);
@@ -75,19 +80,18 @@ public class TestRestServiceMybatisImpl implements TestRestService {
 
         testDomain.setTbIdx(tbIdx);
         testMapper.updateTest(testDomain);
-        return ResponseEntity.ok(new SuccessResponse<>(HttpStatus.OK.toString(), "Data updated",testDomain));
+        return ApiResponse.ok("수정되었습니다.");
     }
 
     @Override
-    public ResponseEntity<SuccessResponse> findAll(TestDomain testDomain) {
+    public ApiResponse findAll(TestDomain testDomain) {
         log.debug("TestDomain.findAll testSearch={}", testDomain.getTestSearch());
 
         if (testDomain.getTestSearch() != null && testDomain.getTestSearch().trim().isEmpty()) {
-            throw new BusinessRestException("잘못된 검색어입니다.", "NOT_FOUND",HttpStatus.NOT_FOUND);
-//            return ResponseEntity.badRequest().body("잘못된 검색어입니다.");
+            return ApiResponse.fail(ApiCode.VALIDATION_FAILED,"검색어에 공백(스페이스바)만 입력하실 수 없습니다.");
         }else{
             List<TestDomain> resultList = testMapper.findAll(testDomain);
-            return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK.toString(),"Data selected",resultList));
+            return ApiResponse.ok(resultList);
         }
     }
     private String generateCustomId() {

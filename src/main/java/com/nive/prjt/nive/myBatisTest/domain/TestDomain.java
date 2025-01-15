@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import jakarta.validation.constraints.*;
 
-@Schema(description = "테스트 객체")
+@Schema(description = "01. Test CRUD COntroller 도메인 정보")
 @Getter
 @Setter
 @AllArgsConstructor   // 매개변수 생성자 추가
