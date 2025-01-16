@@ -1,6 +1,25 @@
+#    dev / prod : 개발 DB 연결 설정
+#    local / s3 : 파일 업로드 서버 구분
+#    mvc / rest : ErrorExceptionHandler 구분 처리(return thymeleaf / return ApiResponse.java)
+
 spring:
   profiles:
-    active: mvc  # "mvc" 또는 "rest"로 설정 핸들러 처리 (@Controller에서의 service를 요청해도 RestControllerAdvice의 Exception동작할 때가 있으므로 지정해서 활용)
+    group:
+      dev: mvc, local
+      prod: mvc, local
+    active: prod # 기본 활성화 프로파일 (dev 그룹)
+  # 공통 mybatis 설정
+  mybatis:
+    type-aliases-package: com.nive.prjt.nive.*.domain
+    configuration:
+      map-underscore-to-camel-case: true
+
+
+--- #테스트 버전의 환경정보 설정
+spring:
+  config:
+    activate:
+      on-profile: dev
   datasource:
     url: jdbc:h2:tcp://localhost/~/test
     driver-class-name: org.h2.Driver
@@ -10,14 +29,66 @@ spring:
       maximum-pool-size: 10
   h2:
     console:
-      enabled: true
-#http://localhost:8080/h2-console/login.do 과 같은 형태로 접근이 가능하다.
+      enabled: true # http://localhost:8080/h2-console/login.do 접근 가능
   mybatis:
-    # 매퍼 파일의 위치를 classpath:mapper/*.xml로 수정
-    mapper-locations: classpath:mapper/*.xml  # 모든 매퍼 XML 파일 로드
-    type-aliases-package: com.nive.prjt.nive.*.domain  # Type Aliases 설정
-    configuration:
-      map-underscore-to-camel-case: true
+    mapper-locations: classpath:mapper/h2/*.xml  # 모든 매퍼 XML 파일 로드
+#    type-aliases-package: com.nive.prjt.nive.*.domain  # Type Aliases 설정
+#    configuration:
+#      map-underscore-to-camel-case: true
+
+
+--- #운영 버전의 환경정보 설정
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:mariadb://rds.amazonaws.com:3306/testdb
+
+    driver-class-name: org.mariadb.jdbc.Driver
+    username:
+    password:
+    hikari:
+      maximum-pool-size: 10
+  mybatis:
+    mapper-locations: classpath:mapper/maria/*.xml  # 모든 매퍼 XML 파일 로드
+#    type-aliases-package: com.nive.prjt.nive.*.domain  # Type Aliases 설정
+#    configuration:
+#      map-underscore-to-camel-case: true
+
+
+--- #MVC Exception Handler
+spring:
+  config:
+    activate:
+      on-profile: mvc
+
+--- #REST API Exception Handler
+spring:
+  config:
+    activate:
+      on-profile: rest
+
+--- #S3 Profile upload
+spring:
+  config:
+    activate:
+      on-profile: s3
+  file-storage:
+    provider: s3
+    bucket: your-s3-bucket-name
+    access-key: your-access-key
+    secret-key: your-secret-key
+
+---  #LOCAL Storage Profile upload
+spring:
+  config:
+    activate:
+      on-profile: local
+  file-storage:
+    provider: local
+    path: /Users/hosikchoi/IntelljProjects/personal/git/prjt/src/main/resources/upload
+
 
 springdoc:
   api-docs:
@@ -45,5 +116,4 @@ springdoc:
     show-extensions: true # 확장 정보 표시 여부
     show-common-extensions: true # 공통 확장 정보 표시 여부
     tags-sorter: alpha
-
   packages-to-scan: com.nive.prjt.nive

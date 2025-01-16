@@ -1,7 +1,6 @@
 package com.nive.prjt.nive.myBatisTest.controller;
 
 import com.nive.prjt.config.response.ApiCode;
-import com.nive.prjt.config.response.SuccessResponse;
 import com.nive.prjt.nive.myBatisTest.domain.TestDomain;
 import com.nive.prjt.nive.myBatisTest.service.TestRestService;
 import io.swagger.v3.oas.annotations.Operation;

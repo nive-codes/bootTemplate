@@ -18,7 +18,7 @@
     </select>
 
     <!-- INSERT -->
-    <insert id="insertTest" parameterType="com.nive.prjt.nive.myBatisTest.domain.TestDomain" useGeneratedKeys="true" keyProperty="tbIdx">
+    <insert id="insertTest" parameterType="TestDomain" useGeneratedKeys="true" keyProperty="tbIdx">
         INSERT INTO test_tb (tb_idx, nm)
         VALUES (#{tbIdx}, #{nm})
     </insert>
