@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @author hosikchoi
+ * @author nive
  * @class SwaggerConfig
  * @desc [클래스 설명]
  * @since 2025-01-15
