@@ -7,7 +7,7 @@ spring:
     group:
       dev: mvc, local
       prod: mvc, local
-    active: prod # 기본 활성화 프로파일 (dev 그룹)
+    active: dev # 기본 활성화 프로파일 (dev 그룹)
   # 공통 mybatis 설정
   mybatis:
     type-aliases-package: com.nive.prjt.nive.*.domain
@@ -87,7 +87,7 @@ spring:
       on-profile: local
   file-storage:
     provider: local
-    path: /Users/hosikchoi/IntelljProjects/personal/git/prjt/src/main/resources/upload
+    path: /Users/nive/IntelljProjects/personal/git/prjt/src/main/resources/upload
 
 
 springdoc:

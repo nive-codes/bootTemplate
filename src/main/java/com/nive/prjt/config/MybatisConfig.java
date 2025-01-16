@@ -6,20 +6,15 @@ import org.apache. ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot. jdbc.DataSourceBuilder; import org.springframework.context.ApplicationContext; import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
-import java.io.IOException;
 
 @Configuration
-@MapperScan(basePackages = {"com.nive.prjt.nive.myBatisTest"},annotationClass = org.apache.ibatis.annotations.Mapper.class) //해당 패키지에서 mapper 어노테이션만 scan
+@MapperScan(basePackages = {"com.nive.prjt"},annotationClass = org.apache.ibatis.annotations.Mapper.class) //해당 패키지에서 mapper 어노테이션만 scan
 @Slf4j
 public class MybatisConfig {
 
@@ -27,7 +22,7 @@ public class MybatisConfig {
     @Value("${spring.mybatis.mapper-locations}")
     private String mapperLocations;
 
-    /*yml명시한 값 - type-aliases-packag*/
+    /*yml명시한 값 - type-aliases-package*/
     @Value("${spring.mybatis.type-aliases-package}")
     private String typeAliasesPackage;
 
