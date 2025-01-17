@@ -5,7 +5,7 @@
 spring:
   profiles:
     group:
-      dev: mvc, local
+      dev: mvc, s3
       prod: mvc, local
     active: dev # 기본 활성화 프로파일 (dev 그룹)
   # 공통 mybatis 설정

@@ -24,8 +24,10 @@ public class ComFileDomain {
     private String fileOrignNm;
     private String filePath;
     private String fileModule;
+    private long fileSize;
     private int fileOrd;
     private String delYn;
+    private String thumYn;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") // 날짜 포맷 설정
     private Date crtDt;
     private String crtId;
