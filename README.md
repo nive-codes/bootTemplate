@@ -1,6 +1,26 @@
 # bootTemplate
 SpringBoot 4.3.1 + Gradle + Mybatis Web Application Template
 
+## 2025.01.17
+### 작업 예정
+1. FileUploadService의 테스트
+2. FileService 테스트
+### 작업 내용
+1. FileuploadService의 uploadFile 통폐합(return String 통일)
+2. FileService 의존성 주입 후 소스 작성
+
+## 2025.01.16
+### 작업 예정
+1. FileUploadService의 구현체 작성 예정(s3, local)
+2. FileService 통합 예정(meta + upload 서비스 통합 객체)
+3. FileRestController 작성 예정(기타 모듈에서 insert, update되는 것 외 삭제, 순서 변경 등)
+### 작업 내용
+1. ID gen service 생성(Egov Id gen 참조)
+2. FileConfig.java 작성(FileUploadService의 구현체를 profile로 나눠서 작성-s3/local)
+3. YML 프로파일 적용(dev / prod)
+4. FileService 설계(MetaService + UploadServer = FileService 형태로 구현 중)
+5. 파일 테이블 설계
+
 ## 2025.01.15
 ### 작업 예정
 1. test api 및 운영 api 구분 처리
