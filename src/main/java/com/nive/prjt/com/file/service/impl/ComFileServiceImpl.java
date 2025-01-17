@@ -5,7 +5,6 @@ import com.nive.prjt.com.file.service.ComFileMetaService;
 import com.nive.prjt.com.file.service.ComFileService;
 import com.nive.prjt.com.file.service.ComFileType;
 import com.nive.prjt.com.file.service.ComFileUploadService;
-import com.nive.prjt.config.exception.business.BusinessException;
 import com.nive.prjt.config.exception.business.BusinessRestException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

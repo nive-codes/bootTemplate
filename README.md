@@ -5,6 +5,7 @@ SpringBoot 4.3.1 + Gradle + Mybatis Web Application Template
 ### 작업 예정
 1. FileUploadService의 테스트
 2. FileService 테스트
+3. 파일 오류 발생 시 rest api 형태의 businessException 에러 처리
 ### 작업 내용
 1. FileuploadService의 uploadFile 통폐합(return String 통일)
 2. FileService 의존성 주입 후 소스 작성
