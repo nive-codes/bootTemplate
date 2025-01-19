@@ -1,6 +1,18 @@
 # bootTemplate
 SpringBoot 4.3.1 + Gradle + Mybatis Web Application Template
 
+## 2025.01.19
+### 작업 예정
+1. FileUploadService의 테스트
+2. FileService 테스트
+3. 파일 오류 발생 시 rest api 형태의 businessException 에러 처리
+4. 파일 업로드 s3 수정 및 확인 필요(s3client vs s3clinetBuilder 차이 확인)
+### 작업 내용
+1. S3client Bean 생성용 Config.java 생성
+2. S3Client Bean을 주입받는 S3관련 FileUploadService 구현(내부에서 Builder 삭제)
+3. S3Client Bean을 주입받는 형태로 mock bean를 주입받아 테스트 케이스 생성할 수 있도록 수정(기존에 소스안에서 this.S3client~ builder를 통해 생성하니 mock 객체를 주입받지 못하는 문제 발생) 유연성 증가
+
+
 ## 2025.01.18
 ### 작업 예정
 1. FileUploadService의 테스트
