@@ -6,6 +6,7 @@ import com.nive.prjt.com.file.service.ComFileUploadService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import software.amazon.awssdk.services.s3.S3Client;
 
 /**
  * @author nive
@@ -24,8 +25,8 @@ public class FileConfig {
 
     @Bean
     @Profile("s3") // s3 프로파일에서만 사용
-    public ComFileUploadService fileS3UploadService() {
-        return new ComFileS3UploadService();
+    public ComFileUploadService fileS3UploadService(S3Client s3Client) {
+        return new ComFileS3UploadService(s3Client);
     }
 }
 

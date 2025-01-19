@@ -2,6 +2,7 @@ package com.nive.prjt.com.file.service.impl;
 
 import com.nive.prjt.com.file.service.ComFileUploadService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
@@ -15,9 +16,7 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 
 /**
  * @author nive
@@ -35,13 +34,19 @@ public class ComFileS3UploadService implements ComFileUploadService {
     private final Region region = Region.AP_NORTHEAST_2; // S3 리전 (서울)
 
     // S3Client 초기화
-    public ComFileS3UploadService() {
-        this.s3Client = S3Client.builder()
-                .region(region)
-                .credentialsProvider(StaticCredentialsProvider.create(
-                        AwsBasicCredentials.create("your-access-key", "your-secret-key")
-                ))
-                .build();
+    // s3 테스트를 위해 config로 S3client를 상속받도록 수정 / 운영과 mock용 s3client 분리 후 주입
+//    public ComFileS3UploadService() {
+//        this.s3Client = S3Client.builder()
+//                .region(region)
+//                .credentialsProvider(StaticCredentialsProvider.create(
+//                        AwsBasicCredentials.create("your-access-key", "your-secret-key")
+//                ))
+//                .build();
+//    }
+
+
+    public ComFileS3UploadService(S3Client s3Client) {
+        this.s3Client = s3Client;
     }
 
     @Override
