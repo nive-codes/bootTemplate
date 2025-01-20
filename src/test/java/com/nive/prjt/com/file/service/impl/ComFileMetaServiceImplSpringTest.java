@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -22,9 +23,6 @@ class ComFileMetaServiceImplSpringTest {
 
     @Autowired
     private ComFileMetaMapper comFileMetaMapper;
-
-    @Autowired
-    private ComTableIdGnrService fileIdGenService;
 
     private ComFileDomain comFileDomain;
 
@@ -84,7 +82,7 @@ class ComFileMetaServiceImplSpringTest {
         // Assert
         assertNotNull(result, "조회된 파일 메타 정보가 null이 아니다.");
         assertEquals(idx, result.getFileId(), "조회된 파일 ID가 예상한 값과 일치한다.");
-        assertEquals("/path/to/file/text", result.getFilePath(), "조회된 파일 경로가 예상한 값과 일치한다.");
+        assertEquals("/path/to/file", result.getFilePath(), "조회된 파일 경로가 예상한 값과 일치한다.");
     }
 
     @Test

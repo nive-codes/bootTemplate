@@ -1,6 +1,21 @@
 # bootTemplate
 SpringBoot 4.3.1 + Gradle + Mybatis Web Application Template
 
+
+## 2025.01.20
+### 작업 예정
+1. ComFileService(meta + 파일업로드) 테스트
+2. 파일업로드 관련 mvc 샘플 작성 및 QA
+3. interceptor를 통한 접속자 구분 처리
+
+### 작업 내용
+1. FileUploadS3Service의 테스트 완료
+2. FileUploadLocalService의 테스트 완료
+3. FileUploadS3Service 통합 테스트 완료(실제 bucket 테스트)
+3. 파일 업로드의 예외처리는 ComFileService에서 잡은 후 처리 필요
+4. src/test/java/com/nive/prjt/com/file/service/impl 전체 테스트 검증 완료
+
+
 ## 2025.01.19
 ### 작업 예정
 1. FileUploadService의 테스트

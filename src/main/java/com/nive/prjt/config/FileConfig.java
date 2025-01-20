@@ -3,6 +3,7 @@ package com.nive.prjt.config;
 import com.nive.prjt.com.file.service.impl.ComFileLocalUploadService;
 import com.nive.prjt.com.file.service.impl.ComFileS3UploadService;
 import com.nive.prjt.com.file.service.ComFileUploadService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -25,8 +26,8 @@ public class FileConfig {
 
     @Bean
     @Profile("s3") // s3 프로파일에서만 사용
-    public ComFileUploadService fileS3UploadService(S3Client s3Client) {
-        return new ComFileS3UploadService(s3Client);
+    public ComFileUploadService fileS3UploadService(S3Client s3Client, @Value("${spring.file-storage.bucket}") String bucketName) {
+        return new ComFileS3UploadService(s3Client, bucketName);
     }
 }
 

@@ -5,14 +5,26 @@
 spring:
   profiles:
     group:
-      dev: mvc, s3
+      dev: mvc, local
       prod: mvc, local
     active: dev # 기본 활성화 프로파일 (dev 그룹)
-  # 공통 mybatis 설정
+  # 생성 모듈의 domain 패키지 지정
   mybatis:
     type-aliases-package: com.nive.prjt.nive.*.domain
     configuration:
       map-underscore-to-camel-case: true
+#  default mybatis 설정
+#TODO     test용 설정때문에 mybatis관련 설정이 없으면 SpringBoot 테스트 에러 발생됨(혹은 중복값도 dev / prod에 입력해야되므로 고민 필요)
+    mapper-locations: classpath:mapper/h2/*.xml  # 모든 매퍼 XML 파일 로드
+# default datasource 설정
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/test
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+    hikari:
+      maximum-pool-size: 10
+
 
 
 --- #테스트 버전의 환경정보 설정
@@ -32,9 +44,6 @@ spring:
       enabled: true # http://localhost:8080/h2-console/login.do 접근 가능
   mybatis:
     mapper-locations: classpath:mapper/h2/*.xml  # 모든 매퍼 XML 파일 로드
-#    type-aliases-package: com.nive.prjt.nive.*.domain  # Type Aliases 설정
-#    configuration:
-#      map-underscore-to-camel-case: true
 
 
 --- #운영 버전의 환경정보 설정
@@ -52,9 +61,6 @@ spring:
       maximum-pool-size: 10
   mybatis:
     mapper-locations: classpath:mapper/maria/*.xml  # 모든 매퍼 XML 파일 로드
-#    type-aliases-package: com.nive.prjt.nive.*.domain  # Type Aliases 설정
-#    configuration:
-#      map-underscore-to-camel-case: true
 
 
 --- #MVC Exception Handler
@@ -75,10 +81,10 @@ spring:
     activate:
       on-profile: s3
   file-storage:
-    provider: s3
-    bucket: your-s3-bucket-name
-    access-key: your-access-key
-    secret-key: your-secret-key
+    bucket: test
+    access-key: 1234
+    secret-key: 1234
+    region: ap-northeast-2
 
 ---  #LOCAL Storage Profile upload
 spring:

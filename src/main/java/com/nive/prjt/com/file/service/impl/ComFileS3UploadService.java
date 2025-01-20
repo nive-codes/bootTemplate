@@ -2,12 +2,9 @@ package com.nive.prjt.com.file.service.impl;
 
 import com.nive.prjt.com.file.service.ComFileUploadService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
-import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
@@ -23,6 +20,7 @@ import java.nio.file.Path;
  * @class FileS3UploadService
  * @desc AWS S3의 파일 업로드 서비스 impl
  * config/FileConfig.java 및 yml의 설정에 따라 bean 생성
+ * FileConfig에서 yml의 bucket name을 받도록 수정
  * @since 2025-01-16
  */
 
@@ -30,27 +28,19 @@ import java.nio.file.Path;
 public class ComFileS3UploadService implements ComFileUploadService {
 
     private final S3Client s3Client;
-    private final String bucketName = "your-bucket-name"; // S3 버킷 이름
-    private final Region region = Region.AP_NORTHEAST_2; // S3 리전 (서울)
+    private final String bucketName;
 
-    // S3Client 초기화
-    // s3 테스트를 위해 config로 S3client를 상속받도록 수정 / 운영과 mock용 s3client 분리 후 주입
-//    public ComFileS3UploadService() {
-//        this.s3Client = S3Client.builder()
-//                .region(region)
-//                .credentialsProvider(StaticCredentialsProvider.create(
-//                        AwsBasicCredentials.create("your-access-key", "your-secret-key")
-//                ))
-//                .build();
-//    }
-
-
-    public ComFileS3UploadService(S3Client s3Client) {
+    public ComFileS3UploadService(S3Client s3Client,String bucketName) {
         this.s3Client = s3Client;
+        this.bucketName = bucketName;
     }
 
     @Override
     public boolean uploadFile(MultipartFile file, String filePath) {
+
+        log.error("s3Client.uploadFile bucket name {}" +bucketName);
+
+
         try {
             //  업로드할 파일을 RequestBody로 변환
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
