@@ -5,15 +5,15 @@ import com.nive.prjt.com.file.service.ComFileMetaService;
 import com.nive.prjt.com.file.service.ComFileService;
 import com.nive.prjt.com.file.service.ComFileType;
 import com.nive.prjt.com.file.service.ComFileUploadService;
+import com.nive.prjt.config.exception.business.BusinessException;
 import com.nive.prjt.config.exception.business.BusinessRestException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.sql.SQLException;
-
 
 /**
  * @author nive
@@ -26,7 +26,7 @@ import java.sql.SQLException;
 @AllArgsConstructor
 @Slf4j
 public class ComFileServiceImpl implements ComFileService {
-
+    private final HttpServletRequest request;
     private final ComFileMetaService comFileMetaService;
     private final ComFileUploadService comFileUploadService;
 
@@ -51,12 +51,14 @@ public class ComFileServiceImpl implements ComFileService {
             if (comFileUploadService.uploadFile(file, filePath)) {
                 return processFileId(fileId,comFileDomain);
             } else {
-                log.warn("물리적 파일 업로드 실패 : {}", filePath);
-                return null;
+                log.error("물리적 파일 업로드 실패 : {}", file.getOriginalFilename());
+                /*returnBusinessException에서 restController 요청인지 확인 후 return 처리*/
+                throw returnBusinessException("파일 업로드가 정상적으로 처리되지 못했습니다.","/error/404");
+
             }
         }else{
-            log.warn("업로드할 파일 검증 실패했습니다.");
-            return null;
+            log.error("물리적 파일 데이터 검증 실패 : {}", file.getOriginalFilename());
+            throw returnBusinessException("파일 검증이 정상적으로 이루어지지 않았습니다.","/error/404");
         }
     }
 
@@ -78,11 +80,11 @@ public class ComFileServiceImpl implements ComFileService {
                     fileId = processFileId(fileId, comFileDomain);
                 } else {
                     log.error("물리적 파일 업로드 실패 : {}", file.getOriginalFilename());
-                    throw new BusinessRestException("파일 업로드에 실패했습니다.","VALIDATE",HttpStatus.BAD_REQUEST);
+                    throw returnBusinessException("파일 업로드가 정상적으로 처리되지 못했습니다.","/error/404");
                 }
             } else {
                 log.error("물리적 파일 데이터 검증 실패 : {}", file.getOriginalFilename());
-                throw new BusinessRestException("파일 데이터 검증에 실패했습니다.","VALIDATE", HttpStatus.BAD_REQUEST);
+                throw returnBusinessException("파일 검증이 정상적으로 이루어지지 않았습니다.","/error/404");
             }
         }
 
@@ -90,15 +92,24 @@ public class ComFileServiceImpl implements ComFileService {
     }
 
     @Override
-    public boolean deleteFile(String fileId) {
-//        TODO 파일업로드 테스트 및 확인 완료 후 작성
-        /*fileMetaService의 정보 논리삭제 호출*/
+    public boolean deleteFileList(String fileId) {
+        try{
+            comFileMetaService.deleteFileMetaList(fileId);
+            return true;
+        } catch (Exception e){
+            return false;
+        }
+    }
+
+    @Override
+    public boolean deleteFile(String fileId, int fileSeq) {
+        comFileMetaService.deleteFileMeta(fileId, fileSeq);
         return false;
     }
 
-
     @Override
     public boolean deleteRealFile(String fileId) {
+
 //        TODO 파일업로드 테스트 및 확인 완료 후 작성
         /*fileMetaService의 정보 물리삭제 및 파일 삭제 호출*/
         return false;
@@ -226,20 +237,40 @@ public class ComFileServiceImpl implements ComFileService {
      * @param comFileDomain
      * @return String
      */
-    private String processFileId(String fileId, ComFileDomain comFileDomain) {
+    private String processFileId(String fileId, ComFileDomain comFileDomain){
         // fileId가 null 또는 빈 값인 경우 새로 추가, 그렇지 않으면 업데이트
-        try{
-            if (fileId == null || fileId.isBlank()) {
+        if (fileId == null || fileId.isBlank()) {
+            try {
                 fileId = comFileMetaService.insertFileMeta(comFileDomain);
-            } else {
+            } catch (Exception e) {
+                log.error("파일 메타 데이터 INSERT 실패 {}", e.getMessage());
+                throw returnBusinessException("파일 메타 데이터 insert 실패","/error/404");
+            }
+        } else {
+            try {
                 comFileDomain.setFileId(fileId);
                 comFileMetaService.updateFileMeta(comFileDomain);
+            } catch (Exception e) {
+                log.error("파일 메타 데이터 UPDATE 실패 {}", e.getMessage());
+                throw returnBusinessException("파일 메타 데이터 update 실패","/error/404");
             }
-            return fileId;
+        }
+        return fileId;
+    }
 
-        } catch (Exception e){
-            log.error("파일 메타 데이터 업로드 실패 {}", e.getMessage());
-            return null;
+    /**
+     * 파일 업로드 시 공통 예외 처리 BusinessException return 메소드
+     * RestController요청인 경우 RestException 요청(ApiResponse return)
+     * Controller요청인 경우 Exception 요청(view return)
+     * @param message
+     * @param returnView
+     * @return
+     */
+    private RuntimeException returnBusinessException(String message, String returnView){
+        if (request.getAttribute("org.springframework.web.servlet.DispatcherServlet.CONTROLLER") instanceof RestController) {
+            return new BusinessRestException(message, "FILE_UPLOAD_FAILURE",HttpStatus.BAD_REQUEST);  // REST API 응답
+        } else {
+            return new BusinessException(message, returnView);  // View 리디렉션
         }
     }
 }

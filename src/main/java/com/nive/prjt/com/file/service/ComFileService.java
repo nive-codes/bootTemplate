@@ -2,7 +2,6 @@ package com.nive.prjt.com.file.service;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 
 /**
  * @author nive
@@ -32,15 +31,24 @@ public interface ComFileService {
      *  @param fileType 파일검증 Enum
      *  @param fileSizeMB 파일용량
      */
-    String uploadFileList(MultipartFile[] files, String filePath, String filId, ComFileType fileType, long fileSizeMB);
+    String uploadFileList(MultipartFile[] files, String filePath, String fileId, ComFileType fileType, long fileSizeMB);
 
 
     /**
-     * meta데이터 논리 삭제 호출
+     * meta데이터 목록논리 삭제 호출
      * @param fileId 기존 파일ID
+     *
      * @return
      */
-    boolean deleteFile(String fileId);
+    boolean deleteFileList(String fileId);
+
+    /**
+     * meta데이터 목록논리 삭제 호출
+     * @param fileId 기존 파일ID
+     * @param fileSeq 파일 SEQ
+     * @return
+     */
+    boolean deleteFile(String fileId, int fileSeq);
 
     /**
      * meata데이터 + 파일 물리 삭제 처리
