@@ -1,5 +1,6 @@
 package com.nive.prjt.nive.myBatisTest.service;
 
+import com.nive.prjt.config.exception.business.BusinessException;
 import com.nive.prjt.config.exception.business.BusinessRestException;
 import com.nive.prjt.config.response.ApiCode;
 import com.nive.prjt.config.response.ApiResponse;
@@ -52,7 +53,7 @@ public class TestRestServiceMybatisImpl implements TestRestService {
         TestDomain result = testMapper.findById(tbIdx);
         /*TEST데이터가 있으므로 요청이 왔지만 없으므로 예외 처리*/
         if (result == null) {
-            throw new BusinessRestException("존재하지 않는 TEST 데이터 입니다.","NOT_FOUND",HttpStatus.NOT_FOUND);
+            throw new BusinessException("존재하지 않는 TEST 데이터 입니다.","NOT_FOUND",HttpStatus.NOT_FOUND);
 //            return ApiResponse.fail(ApiCode.VALIDATION_FAILED);
         }
         return ApiResponse.ok(result);
@@ -64,7 +65,7 @@ public class TestRestServiceMybatisImpl implements TestRestService {
         TestDomain existingTest = testMapper.findById(tbIdx);
         /*TEST데이터가 있으므로 요청이 왔지만 없으므로 예외 처리*/
         if (existingTest == null) {
-            throw new BusinessRestException("존재하지 않는 TEST 데이터 입니다.","NOT_FOUND",HttpStatus.NOT_FOUND);
+            throw new BusinessException("존재하지 않는 TEST 데이터 입니다.","NOT_FOUND",HttpStatus.NOT_FOUND);
         }
 
         testMapper.deleteTest(tbIdx);
@@ -75,7 +76,7 @@ public class TestRestServiceMybatisImpl implements TestRestService {
     public ApiResponse updateTest(String tbIdx, TestDomain testDomain) {
         TestDomain existingTest = testMapper.findById(tbIdx);
         if (existingTest == null) {
-            throw new BusinessRestException("존재하지 않는 TEST 데이터 입니다.", "NOT_FOUND",HttpStatus.NOT_FOUND);
+            throw new BusinessException("존재하지 않는 TEST 데이터 입니다.", "NOT_FOUND",HttpStatus.NOT_FOUND);
         }
 
         testDomain.setTbIdx(tbIdx);

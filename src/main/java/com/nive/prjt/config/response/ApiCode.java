@@ -19,7 +19,9 @@ public enum ApiCode {
     NULL_POINTER(HttpStatus.INTERNAL_SERVER_ERROR, "NULL_POINTER", "Null 값이 처리되었습니다."),
     INDEX_OUT_OF_BOUNDS(HttpStatus.INTERNAL_SERVER_ERROR, "INDEX_OUT_OF_BOUNDS", "배열 또는 리스트의 인덱스 범위를 벗어났습니다."),
     ARITHMETIC_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "ARITHMETIC_ERROR", "연산 오류가 발생했습니다."),
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", "알 수 없는 오류가 발생했습니다.");
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", "알 수 없는 오류가 발생했습니다."),
+    /*커스텀 정의 return 객체*/
+    CUSTOM(HttpStatus.INTERNAL_SERVER_ERROR, "CUSTOM", "커스텀 에러 메시지");
 
     private final HttpStatus status;
     private final String code;
@@ -29,5 +31,22 @@ public enum ApiCode {
         this.status = status;
         this.code = code;
         this.message = message;
+    }
+
+    // ApiCode.CUSTOM을 사용하도록 변경
+    public static ApiCode custom(String code, String message) {
+        return ApiCode.CUSTOM;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public HttpStatus getStatus() {
+        return status;
     }
 }

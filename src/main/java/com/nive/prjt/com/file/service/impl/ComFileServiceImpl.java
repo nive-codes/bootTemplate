@@ -7,6 +7,7 @@ import com.nive.prjt.com.file.service.ComFileType;
 import com.nive.prjt.com.file.service.ComFileUploadService;
 import com.nive.prjt.config.exception.business.BusinessException;
 import com.nive.prjt.config.exception.business.BusinessRestException;
+import com.nive.prjt.config.response.ApiCode;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +46,7 @@ public class ComFileServiceImpl implements ComFileService {
 
         if(validateFile(file,fileType, fileSizeMB)){
 
+
             ComFileDomain comFileDomain = createFileDomain(file,filePath,fileId);   //변수값을 토대로 comFileDomain  생성
 
             // 업로드 파일 시도
@@ -53,12 +55,15 @@ public class ComFileServiceImpl implements ComFileService {
             } else {
                 log.error("물리적 파일 업로드 실패 : {}", file.getOriginalFilename());
                 /*returnBusinessException에서 restController 요청인지 확인 후 return 처리*/
-                throw returnBusinessException("파일 업로드가 정상적으로 처리되지 못했습니다.","/error/404");
+//                throw returnBusinessException("파일 업로드가 정상적으로 처리되지 못했습니다.","/error/404");
+                throw new BusinessException("파일 업로드가 정상적으로 처리되지 못했습니다.","/error/404");
+
 
             }
         }else{
             log.error("물리적 파일 데이터 검증 실패 : {}", file.getOriginalFilename());
-            throw returnBusinessException("파일 검증이 정상적으로 이루어지지 않았습니다.","/error/404");
+//            throw returnBusinessException("파일 검증이 정상적으로 이루어지지 않았습니다.","/error/404");
+            throw new BusinessException("파일 업로드가 정상적으로 처리되지 못했습니다.","/error/404");
         }
     }
 
@@ -80,11 +85,13 @@ public class ComFileServiceImpl implements ComFileService {
                     fileId = processFileId(fileId, comFileDomain);
                 } else {
                     log.error("물리적 파일 업로드 실패 : {}", file.getOriginalFilename());
-                    throw returnBusinessException("파일 업로드가 정상적으로 처리되지 못했습니다.","/error/404");
+                    throw new BusinessException("파일 업로드가 정상적으로 처리되지 못했습니다.","/error/404");
+//                    throw returnBusinessException("파일 업로드가 정상적으로 처리되지 못했습니다.","/error/404");
                 }
             } else {
                 log.error("물리적 파일 데이터 검증 실패 : {}", file.getOriginalFilename());
-                throw returnBusinessException("파일 검증이 정상적으로 이루어지지 않았습니다.","/error/404");
+                throw new BusinessException("파일 업로드가 정상적으로 처리되지 못했습니다.","/error/404");
+//                throw returnBusinessException("파일 검증이 정상적으로 이루어지지 않았습니다.","/error/404");
             }
         }
 
@@ -244,7 +251,7 @@ public class ComFileServiceImpl implements ComFileService {
                 fileId = comFileMetaService.insertFileMeta(comFileDomain);
             } catch (Exception e) {
                 log.error("파일 메타 데이터 INSERT 실패 {}", e.getMessage());
-                throw returnBusinessException("파일 메타 데이터 insert 실패","/error/404");
+                throw new BusinessException("파일 메타 데이터 update 실패","/error/404");
             }
         } else {
             try {
@@ -252,25 +259,28 @@ public class ComFileServiceImpl implements ComFileService {
                 comFileMetaService.updateFileMeta(comFileDomain);
             } catch (Exception e) {
                 log.error("파일 메타 데이터 UPDATE 실패 {}", e.getMessage());
-                throw returnBusinessException("파일 메타 데이터 update 실패","/error/404");
+                throw new BusinessException("파일 메타 데이터 update 실패","/error/404");
             }
         }
         return fileId;
     }
 
-    /**
-     * 파일 업로드 시 공통 예외 처리 BusinessException return 메소드
-     * RestController요청인 경우 RestException 요청(ApiResponse return)
-     * Controller요청인 경우 Exception 요청(view return)
-     * @param message
-     * @param returnView
-     * @return
-     */
-    private RuntimeException returnBusinessException(String message, String returnView){
-        if (request.getAttribute("org.springframework.web.servlet.DispatcherServlet.CONTROLLER") instanceof RestController) {
-            return new BusinessRestException(message, "FILE_UPLOAD_FAILURE",HttpStatus.BAD_REQUEST);  // REST API 응답
-        } else {
-            return new BusinessException(message, returnView);  // View 리디렉션
-        }
-    }
+
+//    20250121 수정 -> BusinessException과 BusinessRestException 통합으로 return 처리
+//                 -> RestApi 및 mvc의 처리 시 자동으로 ApiResponse return 및 mvc 에러 처리가 가능하다.
+//    /**
+//     * 파일 업로드 시 공통 예외 처리 BusinessException return 메소드
+//     * RestController요청인 경우 RestException 요청(ApiResponse return)
+//     * Controller요청인 경우 Exception 요청(view return)
+//     * @param message
+//     * @param returnView
+//     * @return
+//     */
+//    private RuntimeException returnBusinessException(String message, String returnView){
+//        if (request.getAttribute("org.springframework.web.servlet.DispatcherServlet.CONTROLLER") instanceof RestController) {
+//            return new BusinessRestException(message, "FILE_UPLOAD_FAILURE",HttpStatus.BAD_REQUEST);  // REST API 응답
+//        } else {
+//            return new BusinessException(message, returnView);  // View 리디렉션
+//        }
+//    }
 }

@@ -22,9 +22,10 @@ import java.util.Map;
 @Slf4j
 public class BusinessRestExceptionHandler {
 
-    @ExceptionHandler(BusinessRestException.class)
-    public ApiResponse<?> handleException(BusinessRestException ex) {
-        log.error("Business exception : ErrorCode: {}, Message: {}", ex.getErrorCode(), ex.getMessage());
+    @ExceptionHandler(BusinessException.class)
+    public ApiResponse<?> handleException(BusinessException ex) {
+        log.error("BusinessRestExceptionHandler.BusinessException 발생 : {} (View: {}, ErrorCode: {}, HttpStatus: {})",
+                ex.getMessage(), ex.getReturnView(), ex.getErrorCode(), ex.getHttpStatus(), ex);
 
         // ApiResponse의 실패 형식으로 반환 수정
         // ApiCode는 미리 정의되어 있는 것은 수정이 안되므로 각 Exception 처리할 모듈 단에서 처리

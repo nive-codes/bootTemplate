@@ -12,14 +12,14 @@ import org.springframework.http.HttpStatus;
  */
 @Getter
 public class BusinessRestException extends RuntimeException {
-    private final String errorCode;
-    private final HttpStatus httpStatus;  // HTTP 상태 코드 추가
-
-    public BusinessRestException(String message, String errorCode, HttpStatus httpStatus) {
-        super(message);
-        this.errorCode = errorCode;
-        this.httpStatus = httpStatus;
-    }
+//    private final String errorCode;
+//    private final HttpStatus httpStatus;  // HTTP 상태 코드 추가
+//
+//    public BusinessRestException(String message, String errorCode, HttpStatus httpStatus) {
+//        super(message);
+//        this.errorCode = errorCode;
+//        this.httpStatus = httpStatus;
+//    }
 
 
 }

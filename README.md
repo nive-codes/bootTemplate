@@ -10,8 +10,9 @@ SpringBoot 4.3.1 + Gradle + Mybatis Web Application Template
 ### 작업 내용
 1. ComFileService(meta + 파일업로드) 소스 수정(작업 해야되는 메소드)
 2. 예외처리 오류수정(RestControllerAdvice -> @ControllerAdvice(annotions = RestController.class)
-2. ComFileService(meta + 파일업로드) 테스트
-3. ComFileService(meta + 파일업로드) 스프링 통합 테스트
+3. 예외처리 수정(BusinessException + BusinessRestException 동일하게 처리 + mvc 및 apiReponse return 하게 처리)
+4. ApiCode에서의 custom 객체 추가
+
 
 ## 2025.01.20
 ### 작업 예정

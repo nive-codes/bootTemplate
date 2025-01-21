@@ -1,6 +1,7 @@
 package com.nive.prjt.nive.myBatisTest.service;
 
 import com.nive.prjt.config.exception.business.BusinessException;
+import com.nive.prjt.config.response.ApiCode;
 import com.nive.prjt.nive.myBatisTest.domain.TestDomain;
 import com.nive.prjt.nive.myBatisTest.mapper.TestMapper;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,7 @@ public class TestServiceMybatisImpl implements TestService {
 
         if (sameNm) {
 //            throw new IllegalArgumentException("이미 존재하는 이름입니다");
-            throw new BusinessException("이미 존재하는 이름입니다 - BusinessException", "/test/testNew");
+            throw new BusinessException("이미 존재하는 이름입니다 - BusinessException", "/test/testNew", ApiCode.INTERNAL_SERVER_ERROR);
 
         }
 
