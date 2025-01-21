@@ -2,8 +2,11 @@ package com.nive.prjt.config.exception.business;
 
 import com.nive.prjt.config.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +17,8 @@ import java.util.Map;
  * @desc 비즈니스 공통 예외 처리 handler - (REST API)
  * @since 2025-01-11
  */
-@RestControllerAdvice
+@Order(Ordered.HIGHEST_PRECEDENCE)
+@ControllerAdvice(annotations = RestController.class)
 @Slf4j
 public class BusinessRestExceptionHandler {
 

@@ -3,12 +3,14 @@ package com.nive.prjt.config.exception.globals;
 import com.nive.prjt.config.response.ApiCode;
 import com.nive.prjt.config.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.validation.FieldError;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -22,14 +24,13 @@ import java.util.stream.Collectors;
  * @class GlobalRestExceptionHandler
  * @desc 공통된 오류코드 처리 + all Exception 처리 포함 (REST API)
  * ErrorResponse -> ApiResponse 수정 (25.01.15)
+ * 프로파일 구분에 따른 Exception 예외 처리 통합(25.01.21) - RestControllerAdvice를 mvc에서도 사용할 수 있는 점을 고려한 ControllerAdivce로 수정(RestControllerAdvice가 있다면 무조건 RestControllerAdvice예외가 처리되는 점)
  * @since 2025-01-10
  */
-@RestControllerAdvice
+@Order(Ordered.HIGHEST_PRECEDENCE)
+@ControllerAdvice(annotations = RestController.class)
 @Slf4j
-@Profile("rest")
 public class GlobalRestExceptionHandler {
-
-
     // 404 Not Found: 리소스를 찾을 수 없는 경우
     @ExceptionHandler(NoSuchElementException.class)
     public ApiResponse<?> handleNotFoundException(NoSuchElementException ex) {
@@ -101,4 +102,5 @@ public class GlobalRestExceptionHandler {
         log.error("예외 발생: {}", ex.getMessage(), ex);
         return ApiResponse.fail(ApiCode.INTERNAL_SERVER_ERROR);
     }
+
 }

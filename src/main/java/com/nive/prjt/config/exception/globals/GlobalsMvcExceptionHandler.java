@@ -18,12 +18,12 @@ import java.util.NoSuchElementException;
  * @author nive
  * @class globalExceptionHandler
  * @desc 공통된 오류코드 처리 + all Exception 처리 포함
+ * 프로파일에 구분에 따른 Mvc rest 예외 삭제(25.01.21)
  * @since 2025-01-10
  */
 @ControllerAdvice
 @Slf4j
-@Profile("mvc")
-public class GlobalsExceptionHandler {
+public class GlobalsMvcExceptionHandler {
     // 404 Not Found: 리소스를 찾을 수 없는 경우
     @ExceptionHandler(NoSuchElementException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)

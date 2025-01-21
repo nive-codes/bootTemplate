@@ -5,8 +5,8 @@
 spring:
   profiles:
     group:
-      dev: mvc, local
-      prod: mvc, local
+      dev: local
+      prod: local
     active: dev # 기본 활성화 프로파일 (dev 그룹)
   # 생성 모듈의 domain 패키지 지정
   mybatis:
