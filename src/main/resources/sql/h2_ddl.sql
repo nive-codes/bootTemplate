@@ -30,7 +30,28 @@ create table com_file(
                          primary key (file_id, file_seq)
 )
 
+/*data  pk */
 create table TB_SEQ(
     NAME varchar(50) primary key ,
     SEQ NUMBER
+)
+
+
+/*CRUD 2차 테스트 테이블 - 예제 회원*/
+create table member_tb(
+    member_id varchar(50) primary key,
+    nm varchar(50),
+    tellNo varchar(15),
+    email varchar(20),
+    file_id varchar(50),
+    del_yn varchar(1) default 'N',
+    crt_dt timestamp ,
+    crt_id varchar(50) ,
+    crt_ip_addr varchar(15) ,
+    upd_dt timestamp ,
+    upd_id varchar(50) ,
+    upd_ip_addr varchar(15) ,
+    del_dt timestamp ,
+    del_id varchar(50) ,
+    del_ip_addr varchar(15)
 )

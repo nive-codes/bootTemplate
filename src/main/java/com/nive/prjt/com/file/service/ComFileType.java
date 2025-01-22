@@ -1,8 +1,9 @@
 package com.nive.prjt.com.file.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author nive
@@ -12,35 +13,43 @@ import java.util.List;
  * @since 2025-01-17
  */
 public enum ComFileType {
-    IMAGE(new String[]{"jpg", "jpeg", "png", "gif", "bmp"}),
-    DOCUMENT(new String[]{"pdf", "doc", "docx", "txt", "hwp", "hwpx", "xls", "xlsx"}),
-    VIDEO(new String[]{"mp4", "avi", "mkv"}),
-    AUDIO(new String[]{"mp3", "wav", "aac"}),
-    CUSTOM(new String[]{}); // 동적 추가를 위한 CUSTOM 타입
+    IMAGE(Set.of("jpg", "jpeg", "png", "gif", "bmp")),
+    DOCUMENT(Set.of("pdf", "doc", "docx", "txt", "hwp", "hwpx", "xls", "xlsx")),
+    VIDEO(Set.of("mp4", "avi", "mkv")),
+    AUDIO(Set.of("mp3", "wav", "aac"));
 
-    private final List<String> allowedExtensions;
+    /*list보다 속도가 더 빠른 Set. 동일하게 Collcations 인터페이스를 상속받지만 저장 방식 및 동작 상이*/
+    /*중복 방지*/
+    /*일정한 처리 시간*/
+    private final Set<String> allowedExtensions;
+    private static final Map<String, ComFileType> extensionMap = new HashMap<>();
 
-    ComFileType(String[] allowedExtensions) {
-        this.allowedExtensions = new ArrayList<>(Arrays.asList(allowedExtensions));
-    }
-
-    // 확장자 목록에 새로운 항목 추가
-    public void addCustomExtension(String extension) {
-        if (!allowedExtensions.contains(extension)) {
-            allowedExtensions.add(extension);
+    static {
+        for (ComFileType fileType : values()) {
+            for (String ext : fileType.allowedExtensions) {
+                extensionMap.put(ext.toLowerCase(), fileType);
+            }
         }
     }
 
-    public List<String> getAllowedExtensions() {
+    ComFileType(Set<String> allowedExtensions) {
+        this.allowedExtensions = allowedExtensions;
+    }
+
+    public Set<String> getAllowedExtensions() {
         return allowedExtensions;
     }
 
     public static ComFileType getFileTypeByExtension(String extension) {
-        for (ComFileType fileType : ComFileType.values()) {
-            if (fileType.allowedExtensions.contains(extension)) {
-                return fileType;
-            }
+        if (extension == null || extension.isBlank()) {
+            return null; // 확장자가 없을 경우 null 반환
         }
-        return CUSTOM; // 기본적으로 CUSTOM으로 반환
+        return extensionMap.get(extension.toLowerCase());
+    }
+
+    public static void addCustomFileType(String extension, ComFileType fileType) {
+        if (extension != null && !extension.isBlank()) {
+            extensionMap.put(extension.toLowerCase(), fileType);
+        }
     }
 }

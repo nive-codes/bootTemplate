@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Objects;
+
 /**
  * @author nive
  * @class ComFileService
@@ -43,14 +45,14 @@ public class ComFileServiceImpl implements ComFileService {
      */
     @Override
     public String uploadFile(MultipartFile file, String filePath, String fileId, ComFileType fileType, long fileSizeMB) {
+        log.info("파일 업로드 검증 합니다.");
 
         if(validateFile(file,fileType, fileSizeMB)){
 
 
             ComFileDomain comFileDomain = createFileDomain(file,filePath,fileId);   //변수값을 토대로 comFileDomain  생성
-
-            // 업로드 파일 시도
-            if (comFileUploadService.uploadFile(file, filePath)) {
+            log.info("comFileDomain : "+comFileDomain);
+            if (comFileUploadService.uploadFile(file, comFileDomain.getFilePath()+comFileDomain.getFileUpldNm())) {
                 return processFileId(fileId,comFileDomain);
             } else {
                 log.error("물리적 파일 업로드 실패 : {}", file.getOriginalFilename());
@@ -81,7 +83,8 @@ public class ComFileServiceImpl implements ComFileService {
             if(validateFile(file,fileType, fileSizeMB)){
                 ComFileDomain comFileDomain = createFileDomain(file,filePath,fileId);
                 //변수값을 토대로 comFileDomain  생성
-                if (comFileUploadService.uploadFile(file, filePath)) {
+                log.info("comFileDomain : "+comFileDomain);
+                if (comFileUploadService.uploadFile(file, comFileDomain.getFilePath()+comFileDomain.getFileUpldNm())) {
                     fileId = processFileId(fileId, comFileDomain);
                 } else {
                     log.error("물리적 파일 업로드 실패 : {}", file.getOriginalFilename());
@@ -171,7 +174,7 @@ public class ComFileServiceImpl implements ComFileService {
     private ComFileDomain createFileDomain(MultipartFile file, String filePath, String fileId) {
         ComFileDomain comFileDomain = new ComFileDomain();
         comFileDomain.setFileId(fileId);   // 변수로 받은 fileId
-        comFileDomain.setFilePath(filePath);    //파일 경로(모듈 명)
+        comFileDomain.setFilePath(filePath+"/");    //파일 경로(모듈 명)
         comFileDomain.setFileModule(filePath);    //파일 경로(모듈 명)
         comFileDomain.setFileOrignNm(file.getOriginalFilename());   //실제 파일 업로드명
         comFileDomain.setFileSize(file.getSize()); //파일 사이즈
@@ -197,10 +200,14 @@ public class ComFileServiceImpl implements ComFileService {
      * @return
      */
     private boolean isExtValid(String ext, ComFileType comFileType) {
+
+
+//        if(Objects.isNull(ext) || ext.isBlank()) {}
         if(ext == null || ext.isBlank()){
             return false;
         }else{
-            return comFileType.getAllowedExtensions().contains(ext.trim().toLowerCase());
+            String cleandExt = ext.trim().toLowerCase().replace(".","");
+            return comFileType.getAllowedExtensions().contains(cleandExt);
         }
     }
 

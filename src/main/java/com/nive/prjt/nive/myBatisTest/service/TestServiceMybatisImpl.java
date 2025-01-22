@@ -38,7 +38,7 @@ public class TestServiceMybatisImpl implements TestService {
 
         if (sameNm) {
 //            throw new IllegalArgumentException("이미 존재하는 이름입니다");
-            throw new BusinessException("이미 존재하는 이름입니다 - BusinessException", "/test/testNew", ApiCode.INTERNAL_SERVER_ERROR);
+            throw new BusinessException("이미 존재하는 이름입니다 - BusinessException","/test/testNew");
 
         }
 

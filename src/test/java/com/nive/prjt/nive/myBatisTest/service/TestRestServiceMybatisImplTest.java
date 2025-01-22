@@ -3,7 +3,7 @@ package com.nive.prjt.nive.myBatisTest.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
 
-import com.nive.prjt.config.exception.business.BusinessRestException;
+import com.nive.prjt.config.exception.business.BusinessException;
 import com.nive.prjt.config.response.ApiCode;
 import com.nive.prjt.config.response.ApiResponse;
 import com.nive.prjt.nive.myBatisTest.domain.TestDomain;
@@ -100,7 +100,7 @@ class TestRestServiceMybatisImplTest {
         when(testMapper.findById(tbIdx)).thenReturn(null);  /*null인 경우*/
 
         // When & Then
-        BusinessRestException exception = assertThrows(BusinessRestException.class, () -> {
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
             testRestService.getTest(tbIdx);
         });
 
@@ -140,7 +140,7 @@ class TestRestServiceMybatisImplTest {
         when(testMapper.findById(tbIdx)).thenReturn(null);
 
         // When & Then
-        BusinessRestException exception = assertThrows(BusinessRestException.class, () -> {
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
             testRestService.deleteTest(tbIdx);
         });
         assertEquals("존재하지 않는 TEST 데이터 입니다.", exception.getMessage());
@@ -171,7 +171,7 @@ class TestRestServiceMybatisImplTest {
         when(testMapper.findById(tbIdx)).thenReturn(null); // findById가 null을 반환하도록 설정
 
         // When & Then
-        BusinessRestException exception = assertThrows(BusinessRestException.class, () -> {
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
             testRestService.updateTest(tbIdx, testDomain); // 예외가 발생해야 함
         });
 

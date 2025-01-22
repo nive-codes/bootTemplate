@@ -13,18 +13,6 @@ spring:
     type-aliases-package: com.nive.prjt.nive.*.domain
     configuration:
       map-underscore-to-camel-case: true
-#  default mybatis 설정
-#TODO     test용 설정때문에 mybatis관련 설정이 없으면 SpringBoot 테스트 에러 발생됨(혹은 중복값도 dev / prod에 입력해야되므로 고민 필요)
-    mapper-locations: classpath:mapper/h2/*.xml  # 모든 매퍼 XML 파일 로드
-# default datasource 설정
-  datasource:
-    url: jdbc:h2:tcp://localhost/~/test
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-    hikari:
-      maximum-pool-size: 10
-
 
 
 --- #테스트 버전의 환경정보 설정
@@ -53,7 +41,6 @@ spring:
       on-profile: prod
   datasource:
     url: jdbc:mariadb://rds.amazonaws.com:3306/testdb
-
     driver-class-name: org.mariadb.jdbc.Driver
     username:
     password:
@@ -93,6 +80,7 @@ spring:
       on-profile: local
   file-storage:
     provider: local
+# TODO   본인 로컬 스토리지로 수정 후 작업하시면 됩니다
     path: /Users/nive/IntelljProjects/personal/git/prjt/src/main/resources/upload
 
 

@@ -34,6 +34,7 @@ public class ComFileLocalUploadService implements ComFileUploadService {
     @Override
     public boolean uploadFile(MultipartFile file, String filePath) {
         fileStoragePath = fileStoragePath.replace("\\", "/");
+        System.out.println("filePath 경로 : "+filePath);
         System.out.println("fileStoragePath : " + fileStoragePath);
         try {
             Path targetPath = Paths.get(fileStoragePath, filePath);

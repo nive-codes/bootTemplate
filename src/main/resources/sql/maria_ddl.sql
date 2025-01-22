@@ -35,3 +35,23 @@ create table TB_SEQ(
                        NAME varchar(50) primary key commit '시퀀스테이블명',
                        SEQ NUMBER comment '시퀀스'
 ) comment '시퀀스관리테이블'
+
+
+/*CRUD 2차 테스트 테이블 - 예제 회원*/
+create table member_tb(
+                          member_id varchar(50)     comment '회원ID'            primary key,
+                          nm varchar(50)            comment '회원명',
+                          tellNo varchar(15)        comment '전화번호',
+                          email varchar(20)         comment '이메일',
+                          file_id varchar(50)       comment '첨부파일ID',
+                          del_yn varchar(1)                 default 'N',
+                          crt_dt datetime           comment '등록일',
+                          crt_id varchar(50)        comment '등록자',
+                          crt_ip_addr varchar(15)   comment '등록자IP',
+                          upd_dt datetime           comment '수정일',
+                          upd_id varchar(50)        comment '수정자',
+                          upd_ip_addr varchar(15)   comment '수정자IP',
+                          del_dt datetime           comment '삭제일',
+                          del_id varchar(50)        comment '삭제자ID',
+                          del_ip_addr varchar(15)   comment '삭제자IP'
+                          )

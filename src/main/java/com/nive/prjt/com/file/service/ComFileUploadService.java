@@ -17,9 +17,10 @@ public interface ComFileUploadService {
     /**
      * 파일을 실제로 서버에 저장을 요청하는 메서드
      * @param file
+     * @param filePathAndFilename 파일경로 + 파일명
      * @return boolean
      */
-    boolean uploadFile(MultipartFile file, String filePath);
+    boolean uploadFile(MultipartFile file, String filePathAndFilename);
 
     /**
      * 파일이 실제로 서버에 저장된 파일을 가져오는 메서드
