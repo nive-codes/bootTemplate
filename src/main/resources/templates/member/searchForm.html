@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="container">
+    <p th:if="${message}" th:text="${message}"></p>
+    <form action="/member/searchForm" method="get" >
+        <select name="condition" id="condition">
+            <option value="name" th:selected="${condition == 'name'}">이름</option>
+            <option value="email" th:selected="${condition == 'email'}">이메일</option>
+            <option value="tellNo" th:selected="${condition=='tellNo'}">전화번호</option>
+        </select>
+        <input type="text"  name="keyword" id="keyword" placeholder="검색어를 입력해주세요" th:value="${keyword}">
+        <button type="submit">검색</button>
+
+    </form>
+    <div>
+        <table>
+            <thead>
+            <tr>
+                <th>회원ID</th>
+                <th>이름</th>
+                <th>연락처</th>
+                <th>이메일</th>
+                <th>회원가입일</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="result : ${list}">
+                <td>
+                    <a th:href="@{/member/updateForm?memberId={id}(id=${result.memberId})}" th:text="${result.memberId}"></a>
+                </td>
+                <td th:text="${result.nm}"></td>
+                <td th:text="${result.tellNo}"></td>
+                <td th:text="${result.email}"></td>
+                <td th:text="${result.crtDt}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div> <!-- /container -->
+</body>
+</html>

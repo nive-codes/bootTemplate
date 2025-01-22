@@ -1,0 +1,187 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="container">
+    <div id="errorDiv">
+        <strong style="color: red;" th:text="${errorMessage}"/>
+    </div>
+
+    <form id="memberDomain" name="memberDomain"  th:action="${formFlag == 'Y' ? '/member/insert' : '/member/update'}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="memberId" id="memberId" th:value="${memberDomain.memberId}"/>
+        <input type="hidden" name="memberId" id="fileId" th:value="${memberDomain.fileId}"/>
+        <!-- 이름 입력 -->
+        <div class="form-group">
+            <label for="nm">이름</label>
+            <input type="text" id="nm" name="nm" placeholder="이름을 입력하세요" th:value="${memberDomain.nm}">
+        </div>
+
+        <!-- 연락처 입력 -->
+        <div class="form-group">
+            <label for="tellNo">연락처</label>
+            <input type="text" id="tellNo" name="tellNo" placeholder="연락처를 입력하세요." th:value="${memberDomain.tellNo}">
+        </div>
+
+        <!-- 이메일 입력 -->
+        <div class="form-group">
+            <label for="email">이메일</label>
+            <input type="text" id="email" name="email" placeholder="이메일을 입력하세요" th:value="${memberDomain.email}"/>
+        </div>
+
+        <!-- 파일 업로드 -->
+        <div class="form-group">
+            <label for="file1">첨부파일1</label>
+            <!--id는 동적으로 생길 파일 명 지정-->
+            <input type="file" id="file1" name="file" multiple onchange="addFiles(event)" style="display: none">
+            <button type="button" onclick="document.getElementById('file1').click()">업로드</button>
+        </div>
+
+        <!-- 선택된 파일1 목록 -->
+        <div id="file1ListContainer">
+
+        </div>
+
+        <!--TODO file관련 html 별도 생성 및 공통 js 변환 예정-->
+        <!-- 파일업로드2 -->
+        <!--<div class="form-group">
+            <label for="file2">첨부파일2</label>
+            &lt;!&ndash;id는 동적으로 생길 파일 명 지정&ndash;&gt;
+            <input type="file" id="file2" name="file" multiple onchange="addFiles(event)" style="display: none">
+            <button type="button" onclick="document.getElementById('file2').click()">업로드</button>
+        </div>
+
+        &lt;!&ndash; 선택된 파일2 목록 &ndash;&gt;
+        <div id="file2ListContainer">
+            &lt;!&ndash; 파일 목록은 자바스크립트로 동적으로 추가됨 &ndash;&gt;
+        </div>-->
+
+
+
+        <!-- 숨겨진 필드로 파일 이름을 서버로 전송 -->
+        <div id="fileInputHiddenFields">
+            <!-- 숨겨진 파일 입력 필드는 자바스크립트로 동적으로 추가됨 -->
+        </div>
+
+        <!-- 제출 버튼 -->
+        <button type="button" onclick="submitForm();" th:text="${formFlag == 'Y' ? '등록' : '수정'}"></button>
+    </form>
+</div> <!-- /container -->
+
+<script>
+    let selectedFiles = {
+        file1: [],
+        file2: []
+    };
+
+    // 파일을 선택했을 때 호출되는 함수
+    function addFiles(event) {
+        const inputElement = event.target;
+        const files = Array.from(inputElement.files);
+        const fileType = inputElement.id; // file1 또는 file2
+
+        // 파일 목록을 다시 업데이트
+        selectedFiles[fileType] = [...selectedFiles[fileType], ...files];
+
+        // 파일 목록 업데이트
+        updateFileList(fileType);
+
+        // 동적으로 파일 입력 필드를 생성하여 폼에 추가
+        createDynamicFileInputs();
+    }
+
+    // 파일 목록을 동적으로 화면에 표시
+    function updateFileList(fileType) {
+        const containerId = fileType === "file1" ? "file1ListContainer" : "file2ListContainer";
+        const fileListContainer = document.getElementById(containerId);
+        fileListContainer.innerHTML = ''; // 기존 파일 목록 초기화
+
+        selectedFiles[fileType].forEach((file, index) => {
+            const fileItem = document.createElement("div");
+            fileItem.classList.add("file-item");
+            fileItem.innerHTML = `
+            <span>${file.name}</span>
+            <button type="button" onclick="removeFile('${fileType}', ${index})">제외</button>
+            <button type="button" onclick="moveFileUp('${fileType}', ${index})">위로</button>
+            <button type="button" onclick="moveFileDown('${fileType}', ${index})">아래로</button>
+        `;
+            fileListContainer.appendChild(fileItem);
+        });
+    }
+
+    // 파일 제외
+    function removeFile(fileType, index) {
+        selectedFiles[fileType].splice(index, 1);
+        updateFileList(fileType);
+        createDynamicFileInputs(); // 삭제된 후 새로운 파일 입력 필드를 생성
+    }
+
+    // 파일 순서 위로
+    function moveFileUp(fileType, index) {
+        if (index > 0) {
+            const temp = selectedFiles[fileType][index];
+            selectedFiles[fileType][index] = selectedFiles[fileType][index - 1];
+            selectedFiles[fileType][index - 1] = temp;
+            updateFileList(fileType);
+            createDynamicFileInputs(); // 순서 변경 후 새로운 파일 입력 필드를 생성
+        }
+    }
+
+    // 파일 순서 아래로
+    function moveFileDown(fileType, index) {
+        if (index < selectedFiles[fileType].length - 1) {
+            const temp = selectedFiles[fileType][index];
+            selectedFiles[fileType][index] = selectedFiles[fileType][index + 1];
+            selectedFiles[fileType][index + 1] = temp;
+            updateFileList(fileType);
+            createDynamicFileInputs(); // 순서 변경 후 새로운 파일 입력 필드를 생성
+        }
+    }
+
+    // 동적으로 파일 입력 필드를 생성하여 폼에 추가
+    function createDynamicFileInputs() {
+        const fileInputHiddenFields = document.getElementById("fileInputHiddenFields");
+
+        // 기존 동적 파일 입력 필드 초기화 (중복 방지)
+        fileInputHiddenFields.innerHTML = '';
+
+        // selectedFiles에 저장된 파일들만큼 동적 파일 입력 필드 생성
+        Object.keys(selectedFiles).forEach((fileType, outerIndex) => {
+            console.log(`Outer index: ${outerIndex}, fileType: ${fileType}`);
+            selectedFiles[fileType].forEach((file,innerIndex) => {
+                console.log(`  Inner index: ${innerIndex}, file: ${file.name}`);
+
+                const input = document.createElement("input");
+                input.type = "file";
+                input.name = fileType; // file1, file2 구분
+                input.files = createFileList(file); // 동적으로 생성된 파일 객체
+                input.style.display = "none"; // 사용자에게는 보이지 않도록 설정
+                fileInputHiddenFields.appendChild(input);
+            });
+        });
+
+        console.log(selectedFiles);
+    }
+
+    // JavaScript에서 File 객체를 사용해 FileList를 생성하는 함수
+    function createFileList(file) {
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        return dataTransfer.files;
+    }
+
+    // 폼 제출
+    function submitForm() {
+
+        // 각 fileType의 파일 개수를 출력
+        Object.keys(selectedFiles).forEach(fileType => {
+            console.log(`${fileType} 파일 개수: ${selectedFiles[fileType].length}`);
+        });
+
+
+        const form = document.getElementById("memberDomain");
+        form.submit(); // 폼 전송
+    }
+
+
+</script>
+</body>
+</html>

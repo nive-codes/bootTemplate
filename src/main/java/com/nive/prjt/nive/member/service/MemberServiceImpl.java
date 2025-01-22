@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.util.List;
 import java.util.Objects;
@@ -43,29 +44,41 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public String insertMember(MemberDomain member, MultipartFile file) {
+    public String insertMember(MemberDomain member, MultipartHttpServletRequest request) {
 
-        String fileId = comFileService.uploadFile(file,"memberTb",member.getFileId(), ComFileType.IMAGE,5);
-        member.setFileId(fileId);
-        String memberId = memberIdGenService.getNextId();
-        member.setMemberId(memberId);
-        memberMapper.insertMember(member);
-        return memberId;
+//        List<MultipartFile> files1 = request.getFiles("file1");
+//
+//        List<MultipartFile> files2 = request.getFiles("file2");
+//        화면단에서 name file로 하면 여기에 모두 들어온다...
+//        List<MultipartFile> files = request.getFiles("file");
+
+        String fileId = comFileService.uploadFileList(request.getFiles("file1"),"memberTb",member.getFileId(), ComFileType.IMAGE,5);
+
+        String fileId2 = comFileService.uploadFileList(request.getFiles("file2"),"memberTb",member.getFileId(), ComFileType.IMAGE,5);   //다중파일(개별fileId) 업로드 확인용,
+
+        return null;
+
+
+//        member.setFileId(fileId);
+//        String memberId = memberIdGenService.getNextId();
+//        member.setMemberId(memberId);
+//        memberMapper.insertMember(member);
+//        return memberId;
 
     }
 
     @Override
-    public void updateMember(MemberDomain member, MultipartFile file) {
+    public void updateMember(MemberDomain member, MultipartHttpServletRequest request) {
 
         if(Objects.isNull(member.getMemberId()) || member.getMemberId().isBlank()){
             throw new BusinessException("회원ID가 없으므로 목록에서 다시 선택 후, 수정해주세요.","/member/updateForm");
         }
 
-        String fileId = comFileService.uploadFile(file,"",member.getFileId(), ComFileType.IMAGE,5);
+        String fileId = comFileService.uploadFileList(request.getFiles("file1"),"",member.getFileId(), ComFileType.IMAGE,5);
         member.setFileId(fileId);
         memberMapper.updateMember(member);
-
     }
+
 
     @Override
     public void deleteMember(String memberId) {
@@ -82,6 +95,7 @@ public class MemberServiceImpl implements MemberService {
         if(Objects.isNull(memberId) || memberId.isBlank()){
             throw new BusinessException("회원정보를 찾을 수 없습니다.","/member/selectForm");
         }
+
         return memberMapper.findMember(memberId);
     }
 

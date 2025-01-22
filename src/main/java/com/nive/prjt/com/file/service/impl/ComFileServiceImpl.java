@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -45,7 +46,13 @@ public class ComFileServiceImpl implements ComFileService {
      */
     @Override
     public String uploadFile(MultipartFile file, String filePath, String fileId, ComFileType fileType, long fileSizeMB) {
-        log.info("파일 업로드 검증 합니다.");
+
+
+        /*파일이 비어있으면 upload 호출 X*/
+        if(isFileEmpty(file)){
+            log.warn("업로드할 파일이 없습니다.");
+            return null;
+        }
 
         if(validateFile(file,fileType, fileSizeMB)){
 
@@ -71,15 +78,16 @@ public class ComFileServiceImpl implements ComFileService {
 
 
     @Override
-    public String uploadFileList(MultipartFile[] files, String filePath, String fileId, ComFileType fileType, long fileSizeMB)  {
+    public String uploadFileList(List<MultipartFile> files, String filePath, String fileId, ComFileType fileType, long fileSizeMB)  {
 
-        if (files == null || files.length == 0) {
+        if (files == null || files.size() == 0) {
             log.warn("업로드할 파일이 없습니다.");
             return null;
         }
 
         //   파일 반복문 처리
         for (MultipartFile file : files) {
+
             if(validateFile(file,fileType, fileSizeMB)){
                 ComFileDomain comFileDomain = createFileDomain(file,filePath,fileId);
                 //변수값을 토대로 comFileDomain  생성
@@ -125,22 +133,41 @@ public class ComFileServiceImpl implements ComFileService {
         return false;
     }
 
+    @Override
+    public List<ComFileDomain> selectFileList(String fileId) {
+        return comFileMetaService.selectFileMetaList(fileId);
+    }
 
     /**
      * 파일 검증 로직을 공통 메소드로 분리
-     * 1. 파일 여부 체크
-     * 2. 확장자 존재 여부 체크
-     * 3. 확장자 type 체크 여부
+     * 파일 여부 체크
      * @param file
-     * @param fileType
-     * @return
+     * @return boolean
      */
-
-    private boolean validateFile(MultipartFile file, ComFileType fileType, long maxSizeMB) {
-        if (file.isEmpty()) {
+    private boolean isFileEmpty(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
             log.warn("업로드할 파일이 비어 있습니다.");
+            return true;
+        }else{
             return false;
         }
+    }
+
+    /**
+     * 파일 검증 로직을 공통 메소드로 분리
+     * 1. 확장자 존재 여부 체크
+     * 2. 확장자 type 체크 여부
+     * @param file
+     * @param fileType
+     * @return boolean
+     */
+    private boolean validateFile(MultipartFile file, ComFileType fileType, long maxSizeMB) {
+        log.info("파일 업로드 검증 합니다.");
+
+//        if (file.isEmpty()) {
+//            log.warn("업로드할 파일이 비어 있습니다.");
+//            return false;
+//        }
 
         // 확장자 존재여부 확인
         String fileSuffix = getFileSuffix(file);

@@ -1,6 +1,10 @@
 package com.nive.prjt.com.file.service;
 
+import com.nive.prjt.com.file.domain.ComFileDomain;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import java.util.List;
 
 
 /**
@@ -31,7 +35,7 @@ public interface ComFileService {
      *  @param fileType 파일검증 Enum
      *  @param fileSizeMB 파일용량
      */
-    String uploadFileList(MultipartFile[] files, String filePath, String fileId, ComFileType fileType, long fileSizeMB);
+    String uploadFileList(List<MultipartFile> files, String filePath, String fileId, ComFileType fileType, long fileSizeMB);
 
 
     /**
@@ -56,6 +60,8 @@ public interface ComFileService {
      * @return
      */
     boolean deleteRealFile(String fileId);
+
+    List<ComFileDomain> selectFileList(String fileId);
 
 
 

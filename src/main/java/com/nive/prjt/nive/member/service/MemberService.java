@@ -3,6 +3,7 @@ package com.nive.prjt.nive.member.service;
 
 import com.nive.prjt.nive.member.domain.MemberDomain;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.util.List;
 
@@ -13,11 +14,17 @@ import java.util.List;
  * @since 2025-01-21
  */
 public interface MemberService {
+
     boolean existMember(String nm);
-    String insertMember(MemberDomain member, MultipartFile file);
-    void updateMember(MemberDomain member, MultipartFile file);
+
+    String insertMember(MemberDomain member, MultipartHttpServletRequest request);
+
+    void updateMember(MemberDomain member, MultipartHttpServletRequest request);
+
     void deleteMember(String memberId);
+
     MemberDomain findMember(String memberId);
+
     List<MemberDomain> findSearchMembers(String keyword,String condition);
 
 }

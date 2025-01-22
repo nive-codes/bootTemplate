@@ -1,6 +1,6 @@
 #    dev / prod : 개발 DB 연결 설정
 #    local / s3 : 파일 업로드 서버 구분
-#    mvc / rest : ErrorExceptionHandler 구분 처리(return thymeleaf / return ApiResponse.java)
+#    TODO 한 프로젝트에 DB를 여러개 사용할 수 있는 경우가 있으므로 DB관련 프로파일을 추가해서 사용할 수 있도록 처리
 
 spring:
   profiles:
@@ -81,7 +81,7 @@ spring:
   file-storage:
     provider: local
 # TODO   본인 로컬 스토리지로 수정 후 작업하시면 됩니다
-    path: /Users/nive/IntelljProjects/personal/git/prjt/src/main/resources/upload
+    path: /Users/hosikchoi/IntelljProjects/personal/git/prjt/src/main/resources/upload
 
 
 springdoc:

@@ -2,10 +2,22 @@
 SpringBoot 4.3.1 + Gradle + Mybatis Web Application Template
 
 
+
+## 2025.01.22
+### 작업 예정
+1. interceptor를 통한 접속자 구분 처리
+2. 파일업로드 비동기 처리 후 fileId return -> memberService insert, update 메소드와 연계 처리
+
+### 작업 내용
+1. 파일업로드 관련 mvc 샘플 작성 및 QA
+2. MemberService 테스트 케이스 작성
+2. MemberService Spring 테스트 케이스 작성
+3. MemberController thymeleaf 작업
+
 ## 2025.01.21
 ### 작업 예정
-2. 파일업로드 관련 mvc 샘플 작성 및 QA
-3. interceptor를 통한 접속자 구분 처리
+1. 파일업로드 관련 mvc 샘플 작성 및 QA
+2. interceptor를 통한 접속자 구분 처리
 
 ### 작업 내용
 1. ComFileService(meta + 파일업로드) 소스 수정(작업 해야되는 메소드)
