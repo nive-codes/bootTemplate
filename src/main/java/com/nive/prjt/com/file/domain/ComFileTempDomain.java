@@ -8,16 +8,16 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 /**
- * @author nive
- * @class ComFileDomain
- * @desc 파일 업로드 domain 객체
- * @since 2025-01-16
+ * @author hosikchoi
+ * @class ComFileTempDomain
+ * @desc [클래스 설명]
+ * @since 2025-01-23
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ComFileDomain {
-
+public class ComFileTempDomain {
+    private Long tempId;                      //tempID
     private String fileId;                      //파일ID
     private String fileParentId;                //부모파일ID
     private int fileSeq;                        //파일 시퀀스
@@ -27,8 +27,8 @@ public class ComFileDomain {
     private String fileModule;                  //파일업로드 요청한 모듈(ex memberTb)
     private long fileSize;                      //파일 크기
     private int fileOrd;                        //파일 순서(db에서 자동으로 update)
-    private String delYn;                       //논리 삭제 여부
-    private String thumYn;                      //썸네일 여부
+    private String fileStatus;                  //파일 스테이터스(PENDING, VALID, INVALID)
+    private Date expireDt;                      //만료 시간(파일처리 유효기간, 삭제될 시간) - 스테이터스 상관 없이 정해진 시간 뒤에 삭제
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date crtDt;                         //생성일시
     private String crtId;                       //생성자ID
@@ -37,8 +37,5 @@ public class ComFileDomain {
     private Date updDt;                         //수정일시
     private String updId;                       //수정자ID
     private String updIpAddr;                   //수정자IP
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date delDt;                         //삭제일시
-    private String delId;                       //삭제자ID
-    private String delIpAddr;                   //삭제자IP
+
 }

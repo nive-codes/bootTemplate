@@ -52,10 +52,6 @@ public class MemberServiceImpl implements MemberService {
 //        화면단에서 name file로 하면 여기에 모두 들어온다...
 //        List<MultipartFile> files = request.getFiles("file");
 
-        String fileId = comFileService.uploadFileList(request.getFiles("file1"),"memberTb",member.getFileId(), ComFileType.IMAGE,5);
-
-        String fileId2 = comFileService.uploadFileList(request.getFiles("file2"),"memberTb",member.getFileId(), ComFileType.IMAGE,5);   //다중파일(개별fileId) 업로드 확인용,
-
         return null;
 
 
@@ -73,6 +69,8 @@ public class MemberServiceImpl implements MemberService {
         if(Objects.isNull(member.getMemberId()) || member.getMemberId().isBlank()){
             throw new BusinessException("회원ID가 없으므로 목록에서 다시 선택 후, 수정해주세요.","/member/updateForm");
         }
+
+
 
         String fileId = comFileService.uploadFileList(request.getFiles("file1"),"",member.getFileId(), ComFileType.IMAGE,5);
         member.setFileId(fileId);

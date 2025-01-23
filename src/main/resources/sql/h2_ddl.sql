@@ -5,6 +5,14 @@ create table test_tb(
 );
 
 
+
+
+/*data  pk */
+create table TB_SEQ(
+                       NAME varchar(50) primary key ,
+                       SEQ NUMBER
+)
+
 /*파일 정보 테이블*/
 create table com_file(
                          file_id varchar(50) ,
@@ -30,11 +38,28 @@ create table com_file(
                          primary key (file_id, file_seq)
 )
 
-/*data  pk */
-create table TB_SEQ(
-    NAME varchar(50) primary key ,
-    SEQ NUMBER
-)
+
+/* 임시 파일 정보 테이블 */
+create table com_file_temp (
+                       temp_id bigint auto_increment,            -- 임시 테이블의 고유 ID
+                       file_id varchar(50),                      -- 파일 ID
+                       file_seq int,                             -- 파일 시퀀스
+                       file_upld_nm varchar(255),                -- 업로드된 파일 이름
+                       file_orign_nm varchar(255),               -- 원본 파일 이름
+                       file_path varchar(500),                   -- 파일 저장 경로
+                       file_module varchar(50),                  -- 모듈 정보
+                       file_ord int,                             -- 파일 순서
+                       file_size int,                            -- 파일 크기
+                       file_status varchar(20) default 'PENDING',     -- 파일 상태 (PENDING, VALID, INVALID)
+                       expire_dt timestamp,                      -- 만료 시간 (파일 처리 유효 기간)
+                       crt_dt timestamp default current_timestamp, -- 생성 일시
+                       crt_id varchar(50),                       -- 생성자 ID
+                       crt_ip_addr varchar(15),                  -- 생성자 IP 주소
+                       upd_dt timestamp,                         -- 수정 일시
+                       upd_id varchar(50),                       -- 수정자 ID
+                       upd_ip_addr varchar(15),                  -- 수정자 IP 주소
+                       primary key (temp_id)                     -- 기본 키
+);
 
 
 /*CRUD 2차 테스트 테이블 - 예제 회원*/
