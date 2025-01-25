@@ -3,14 +3,7 @@
 <mapper namespace="com.nive.prjt.com.file.mapper.ComFileMetaMapper"> <!--yml에서 alias 설정을 통해 줄일 수 있음.-->
 
     <!-- Insert File Meta -->
-    <insert id="insertFileMeta" parameterType="com.nive.prjt.com.file.domain.ComFileDomain" useGeneratedKeys="true" keyProperty="fileId">
-        <!-- 동적 시퀀스 생성 -->
-        <selectKey keyProperty="fileSeq" resultType="int" order="BEFORE">
-            SELECT COALESCE(MAX(file_seq), 0) + 1
-            FROM com_file
-            WHERE file_id = #{fileId}
-        </selectKey>
-
+    <insert id="insertFileMeta" parameterType="com.nive.prjt.com.file.domain.ComFileDomain">
         INSERT INTO com_file (
             file_id,
             file_seq,
@@ -19,6 +12,7 @@
             file_path,
             file_module,
             file_ord,
+            file_size,
             crt_dt,
             crt_id,
             crt_ip_addr
@@ -30,6 +24,7 @@
             #{filePath},
             #{fileModule},
             #{fileOrd},
+            #{fileSize},
             NOW(),
             #{crtId},
             #{crtIpAddr}
@@ -38,13 +33,6 @@
 
     <!-- Insert File Meta -->
     <insert id="updateFileMeta" parameterType="com.nive.prjt.com.file.domain.ComFileDomain">
-        <!-- 동적 시퀀스 생성 -->
-        <selectKey keyProperty="fileSeq" resultType="int" order="BEFORE">
-            SELECT COALESCE(MAX(file_seq), 0) + 1
-            FROM com_file
-            WHERE file_id = #{fileId}
-        </selectKey>
-
         INSERT INTO com_file (
         file_id,
         file_seq,
@@ -53,6 +41,7 @@
         file_path,
         file_module,
         file_ord,
+        file_size,
         crt_dt,
         crt_id,
         crt_ip_addr
@@ -64,7 +53,7 @@
         #{filePath},
         #{fileModule},
         #{fileOrd},
-
+        #{fileSize},
         NOW(),
         #{crtId},
         #{crtIpAddr}
@@ -81,6 +70,7 @@
             file_path,
             file_module,
             file_ord,
+            file_size,
             del_yn,
             crt_dt,
             crt_id,
@@ -106,6 +96,7 @@
             file_path,
             file_module,
             file_ord,
+            file_size,
             del_yn,
             crt_dt,
             crt_id,
@@ -150,6 +141,7 @@
             file_path,
             file_module,
             file_ord,
+            file_size,
             del_yn,
             crt_dt,
             crt_id,

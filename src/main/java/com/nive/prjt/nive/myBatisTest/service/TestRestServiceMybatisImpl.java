@@ -1,7 +1,6 @@
 package com.nive.prjt.nive.myBatisTest.service;
 
 import com.nive.prjt.config.exception.business.BusinessException;
-import com.nive.prjt.config.exception.business.BusinessRestException;
 import com.nive.prjt.config.response.ApiCode;
 import com.nive.prjt.config.response.ApiResponse;
 import com.nive.prjt.nive.myBatisTest.domain.TestDomain;

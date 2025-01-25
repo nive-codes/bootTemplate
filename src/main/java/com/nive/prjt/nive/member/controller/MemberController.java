@@ -1,7 +1,5 @@
 package com.nive.prjt.nive.member.controller;
 
-import com.nive.prjt.com.file.domain.ComFileDomain;
-import com.nive.prjt.com.file.service.ComFileService;
 import com.nive.prjt.nive.member.domain.MemberDomain;
 import com.nive.prjt.nive.member.service.MemberService;
 import jakarta.validation.Valid;
@@ -32,8 +30,6 @@ import java.util.Objects;
 public class MemberController {
 
     private final MemberService memberService;
-
-    private final ComFileService comFileService;
 
     @GetMapping("/insertForm")
     public String insertForm(Model model, MemberDomain memberDomain) {
@@ -68,10 +64,8 @@ public class MemberController {
             model.addAttribute("errorMessage","회원 정보가 없습니다.");
             return "member/memberForm";
         }
-        List<ComFileDomain> fileList = comFileService.selectFileList(memberDomain.getFileId());
 
 
-        model.addAttribute("fileList",fileList);
         model.addAttribute("formFlag","N"); //update flag
         model.addAttribute("memberDomain",memberDomain);
         return "member/memberForm";
@@ -92,7 +86,6 @@ public class MemberController {
 
         return "member/searchForm";
     }
-
 
     @GetMapping("/searchForm")
     public String searchForm(

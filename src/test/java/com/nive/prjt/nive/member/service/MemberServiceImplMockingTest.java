@@ -1,6 +1,5 @@
 package com.nive.prjt.nive.member.service;
 
-import com.nive.prjt.com.file.service.ComFileService;
 import com.nive.prjt.com.idgen.ComTableIdGnrService;
 import com.nive.prjt.config.exception.business.BusinessException;
 import com.nive.prjt.nive.member.domain.MemberDomain;
@@ -27,8 +26,6 @@ class MemberServiceImplMockingTest {
     @Mock
     private MemberMapper memberMapper;
 
-    @Mock
-    private ComFileService comFileService;
 
     @Mock
     private ComTableIdGnrService memberIdGenService;

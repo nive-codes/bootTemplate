@@ -1,6 +1,8 @@
 package com.nive.prjt.config.exception.business;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -8,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 /**
  * @author nive
  * @class globalExceptionHandler
- * @desc 비즈니스 공통 예외 처리 handler - submit일 때 다시 return view 포함 / 커스텀 business가 너무 많아지면 관리 부하방지
+ * @desc 비즈니스 공통 예외 처리 handler - submit일 때 다시 return view 포함 / 커s스텀 business가 너무 많아지면 관리 부하방지
  * @since 2025-01-10
  */
 @ControllerAdvice

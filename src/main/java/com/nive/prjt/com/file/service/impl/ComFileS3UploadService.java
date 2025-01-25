@@ -36,7 +36,7 @@ public class ComFileS3UploadService implements ComFileUploadService {
     }
 
     @Override
-    public boolean uploadFile(MultipartFile file, String filePath) {
+    public boolean uploadFile(MultipartFile file, String filePath, String fileName) {
 
         log.error("s3Client.uploadFile bucket name {}" +bucketName);
 
@@ -45,11 +45,11 @@ public class ComFileS3UploadService implements ComFileUploadService {
             //  업로드할 파일을 RequestBody로 변환
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
-                    .key(filePath) // S3 내 파일 경로
+                    .key(filePath+"/"+fileName) // S3 내 파일 경로
                     .build();
 
             s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
-            log.info("File uploaded to S3 successfully: {}", filePath);
+            log.info("File uploaded to S3 successfully: {}", filePath+"/"+fileName);
             return true;
         } catch (IOException e) {
             log.error("Failed to upload file to S3: {}", e.getMessage());

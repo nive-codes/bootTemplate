@@ -2,6 +2,7 @@ package com.nive.prjt.com.file.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,20 +14,24 @@ import java.util.Date;
  * @desc 파일 업로드 domain 객체
  * @since 2025-01-16
  */
-@AllArgsConstructor
-@NoArgsConstructor
+@AllArgsConstructor  // Lombok에서 자동으로 생성자를 만들어줍니다.
+@NoArgsConstructor   // 기본 생성자 추가
 @Data
+@Builder
 public class ComFileDomain {
 
     private String fileId;                      //파일ID
     private String fileParentId;                //부모파일ID
-    private int fileSeq;                        //파일 시퀀스
+    @Builder.Default
+    private Integer fileSeq = 0;                        //파일 시퀀스
     private String fileUpldNm;                  //업로드된 파일 명
     private String fileOrignNm;                 //원본 파일 명
     private String filePath;                    //파일 경로(fileModule과 동일)
     private String fileModule;                  //파일업로드 요청한 모듈(ex memberTb)
-    private long fileSize;                      //파일 크기
-    private int fileOrd;                        //파일 순서(db에서 자동으로 update)
+    @Builder.Default
+    private long fileSize = 10L;                      //파일 크기
+    @Builder.Default
+    private Integer fileOrd = 0;                        //파일 순서(db에서 자동으로 update)
     private String delYn;                       //논리 삭제 여부
     private String thumYn;                      //썸네일 여부
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

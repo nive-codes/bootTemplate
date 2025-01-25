@@ -16,11 +16,12 @@ public interface ComFileUploadService {
 
     /**
      * 파일을 실제로 서버에 저장을 요청하는 메서드
-     * @param file
-     * @param filePathAndFilename 파일경로 + 파일명
+     * @param file 파일
+     * @param filePath 파일 경로
+     * @param uploadFileName 업로드할 파일명
      * @return boolean
      */
-    boolean uploadFile(MultipartFile file, String filePathAndFilename);
+    boolean uploadFile(MultipartFile file, String filePath, String uploadFileName);
 
     /**
      * 파일이 실제로 서버에 저장된 파일을 가져오는 메서드
@@ -38,10 +39,10 @@ public interface ComFileUploadService {
 
     /**
      * 파일이 존재하는지 확인하는 메서드
-     * @param filePath
+     * @param filePathName
      * @return boolean
      */
-    boolean isFileExist(String filePath);
+    boolean isFileExist(String filePathName);
 
     /**
      * 썸네일을 생성하는 메서드

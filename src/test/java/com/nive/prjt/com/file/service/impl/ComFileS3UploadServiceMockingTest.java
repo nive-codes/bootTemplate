@@ -45,7 +45,8 @@ class ComFileS3UploadServiceMockingTest {
         when(mockFile.getInputStream()).thenReturn(new ByteArrayInputStream("test content".getBytes()));
         when(mockFile.getSize()).thenReturn(12L);
 
-        String filePath = "test/path/to/file.txt";
+        String filePath = "test/path/to";
+        String fileName = "file.txt";
 
         // mock S3Client의 putObject 메서드 호출을 모의
         PutObjectResponse mockPutObjectResponse = PutObjectResponse.builder().build();
@@ -53,7 +54,7 @@ class ComFileS3UploadServiceMockingTest {
                 .thenReturn(mockPutObjectResponse);
 
         // 메서드 실행
-        boolean result = comFileS3UploadService.uploadFile(mockFile, filePath);
+        boolean result = comFileS3UploadService.uploadFile(mockFile, filePath,fileName);
 
         // 검증: 업로드가 성공적으로 이루어졌는지
         assertTrue(result);

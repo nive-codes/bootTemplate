@@ -32,13 +32,15 @@ public class ComFileLocalUploadService implements ComFileUploadService {
     String fileStoragePath;
 
     @Override
-    public boolean uploadFile(MultipartFile file, String filePath) {
+    public boolean uploadFile(MultipartFile file, String filePath, String fileName) {
         fileStoragePath = fileStoragePath.replace("\\", "/");
-        System.out.println("filePath 경로 : "+filePath);
-        System.out.println("fileStoragePath : " + fileStoragePath);
+
+        log.info("fileStoragePath : " + fileStoragePath);
+        log.info("filePath 경로 : "+filePath);
+        log.info("fileName : " + fileName);
         try {
-            Path targetPath = Paths.get(fileStoragePath, filePath);
-            System.out.println("filePath : "+filePath);
+            Path targetPath = Paths.get(fileStoragePath, filePath,fileName);
+            log.info("targetPath : "+targetPath);
             Files.createDirectories(targetPath.getParent()); // 경로가 없을 경우 생성
             file.transferTo(targetPath.toFile()); // 파일 저장
             log.info("파일 업로드 성공: {}", filePath);
@@ -85,9 +87,9 @@ public class ComFileLocalUploadService implements ComFileUploadService {
     }
 
     @Override
-    public boolean isFileExist(String filePath) {
+    public boolean isFileExist(String filePathName) {
         System.out.println("fileStoragePath : " + fileStoragePath);
-        Path targetPath = Paths.get(fileStoragePath, filePath);
+        Path targetPath = Paths.get(fileStoragePath, filePathName);
         return Files.exists(targetPath);
     }
 

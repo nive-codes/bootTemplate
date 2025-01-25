@@ -1,6 +1,5 @@
 package com.nive.prjt.nive.member.service;
 
-import com.nive.prjt.com.file.service.ComFileService;
 import com.nive.prjt.com.file.service.ComFileType;
 import com.nive.prjt.com.idgen.ComTableIdGnrService;
 import com.nive.prjt.config.exception.business.BusinessException;
@@ -27,7 +26,6 @@ import java.util.Objects;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberMapper memberMapper;
-    private final ComFileService comFileService;
     private final ComTableIdGnrService memberIdGenService;
 
 
@@ -69,11 +67,6 @@ public class MemberServiceImpl implements MemberService {
         if(Objects.isNull(member.getMemberId()) || member.getMemberId().isBlank()){
             throw new BusinessException("회원ID가 없으므로 목록에서 다시 선택 후, 수정해주세요.","/member/updateForm");
         }
-
-
-
-        String fileId = comFileService.uploadFileList(request.getFiles("file1"),"",member.getFileId(), ComFileType.IMAGE,5);
-        member.setFileId(fileId);
         memberMapper.updateMember(member);
     }
 

@@ -2,6 +2,8 @@ package com.nive.prjt.config.exception.globals;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+import org.thymeleaf.exceptions.TemplateInputException;
 
 import java.util.NoSuchElementException;
 
@@ -101,10 +104,18 @@ public class GlobalsMvcExceptionHandler {
         return "/error/400";  // 400 에러 페이지로 이동
     }
 
+    @ExceptionHandler(TemplateInputException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String templateInputException(NoResourceFoundException ex, Model model) {
+        log.error("TemplateInputException 발생: {}", ex.getMessage(), ex);  // ERROR 레벨로 로그
+        model.addAttribute("errorMessage", "알 수 없는 오류가 발생했습니다.");
+        return "error/404"; // 공통 에러 페이지
+    }
+
     // 최종 에러 처리
     @ExceptionHandler(Exception.class)
     public String handleException(Exception ex, Model model) {
-        log.error("ArithmeticException 발생: {}", ex.getMessage(), ex);  // ERROR 레벨로 로그
+        log.error("Exception 발생: {}", ex.getMessage(), ex);  // ERROR 레벨로 로그
         model.addAttribute("errorMessage", "알 수 없는 오류가 발생했습니다.");
         return "error/500"; // 공통 에러 페이지
     }

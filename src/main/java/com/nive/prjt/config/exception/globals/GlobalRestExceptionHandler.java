@@ -5,14 +5,15 @@ import com.nive.prjt.config.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.ui.Model;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+import org.thymeleaf.exceptions.TemplateInputException;
 
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice(annotations = RestController.class)
 @Slf4j
+@ResponseBody
 public class GlobalRestExceptionHandler {
     // 404 Not Found: 리소스를 찾을 수 없는 경우
     @ExceptionHandler(NoSuchElementException.class)
@@ -94,6 +96,14 @@ public class GlobalRestExceptionHandler {
         }
         log.error("NoResourceFoundException 발생: {}", ex.getMessage(), ex);
         return ApiResponse.fail(ApiCode.INVALID_FORMAT);
+    }
+
+    @ExceptionHandler(TemplateInputException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiResponse<?> templateInputException(NoResourceFoundException ex, Model model) {
+        log.error("TemplateInputException 발생: {}", ex.getMessage(), ex);  // ERROR 레벨로 로그
+
+        return ApiResponse.fail(ApiCode.NOT_FOUND);
     }
 
     // 최종 에러 처리

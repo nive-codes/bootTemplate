@@ -1,6 +1,7 @@
 package com.nive.prjt.com.file.mapper;
 
 import com.nive.prjt.com.file.domain.ComFileDomain;
+import com.nive.prjt.com.file.domain.ComFileTempDomain;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -13,12 +14,16 @@ public interface ComFileMetaMapper {
     @Select("SELECT COALESCE(MAX(file_seq), 0) FROM com_file WHERE file_id = #{fileId}")
     int selectMaxFileSeq(String fileId);  // 최대 fileSeq 조회
 
+    /*Temp meta insert*/
+    void insertFileTempMeta(ComFileTempDomain comFileTempDomain);
+
+    /*Temp meta update status*/
+    void updateFileTempMeta(ComFileTempDomain comFileTempDomain);
+
+    /*Temp meata -> real data transfer*/
     void insertFileMeta(ComFileDomain comFileDomain);
 
-    void updateFileMeta(ComFileDomain comFileDomain);
-
     ComFileDomain selectLatestFileMeta(String fileId);
-
 
     ComFileDomain selectFileMeta(String fileId,int fileSeq);
 

@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css"/>
+
+
+
+<!-- 파일 업로드 영역 -->
+<form th:action="@{/view/tempFiles/upload}" method="POST" class="dropzone" id="my-dropzone">
+    <input type="hidden" name="fileId" id="fileId" value=""/>
+    <!-- Dropzone은 파일 업로드와 관련된 정보는 form에 필요 없음, 여기서는 그냥 업로드 영역만 -->
+</form>
+
+<script type="text/javascript">
+    // 파일 업로드에 필요한 설정을 서버에서 받은 값으로 동적으로 설정
+    var fileType = /*[[${fileUploadInfo.fileType}]]*/ 'IMAGE';  // 이미지 타입만 허용
+    var fileSize = /*[[${fileUploadInfo.fileSize}]]*/ 10;      // 최대 파일 사이즈 10MB
+    var filePath = /*[[${fileUploadInfo.filePath}]]*/ 'member';  // 업로드할 파일 경로 (백엔드에서 파일 경로 정보)
+
+
+    Dropzone.options.myDropzone = {
+        url: "/api/tempFiles/upload",  // 파일 업로드 처리 URL
+        maxFilesize: fileSize,  // 최대 파일 크기 10MB
+        acceptedFiles: fileType === 'IMAGE' ? "image/*" : "*",  // fileType에 따라 이미지만 허용
+        method : 'post',
+        paramName: 'files', // 서버에서 사용할 formdata 이름 설정 (default는 file)
+        params: function() {
+            // 서버로 전송할 추가 데이터 (fileType, fileSize, filePath 포함)
+            return {
+                fileType: fileType,
+                fileSize: fileSize,
+                filePath: filePath
+            };
+        },
+        init: function() {
+            // 최초 dropzone 설정시 init을 통해 호출
+            console.log('최초 실행');
+            // 파일 업로드 성공 시 동작
+            this.on("success", function(file, response) {
+                console.log("파일 업로드 성공:", response);
+
+                // 서버에서 반환된 fileId를 hidden 필드에 설정
+                document.getElementById("fileId").value = response.fileId;
+            });
+            // 파일 업로드 실패 시 동작
+            this.on("error", function(file, errorMessage) {
+                console.error("파일 업로드 실패:", errorMessage);
+            });
+        }
+    };
+</script>
+</body>
+</html>

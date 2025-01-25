@@ -28,7 +28,7 @@ class ComFileMetaServiceImplSpringTest {
 
     @BeforeEach
     public void setUp() {
-        comFileDomain = new ComFileDomain();
+        comFileDomain = ComFileDomain.builder().build();
         comFileDomain.setFileUpldNm("testFileUpload.txt");
         comFileDomain.setFileOrignNm("testFileUpload.txt");
         comFileDomain.setFilePath("/path/to/file");
@@ -91,13 +91,12 @@ class ComFileMetaServiceImplSpringTest {
 
         // Arrange
         // 파일 메타 정보 삽입
-        comFileDomain = new ComFileDomain();
-        comFileDomain.setFileUpldNm("testFileUpload1.txt");
+        comFileDomain = ComFileDomain.builder().build();        comFileDomain.setFileUpldNm("testFileUpload1.txt");
         comFileDomain.setFileOrignNm("testFileUpload1.txt");
         comFileDomain.setFilePath("/path/to/file");
         String idx = comFileMetaService.insertFileMeta(comFileDomain);  // 먼저 삽입해야 조회가 가능합니다.
 
-        ComFileDomain comFileDomain2 = new ComFileDomain();
+        ComFileDomain comFileDomain2 = ComFileDomain.builder().build();
         comFileDomain2.setFileUpldNm("testFileUpload2.txt");
         comFileDomain2.setFileOrignNm("testFileUpload2.txt");
         comFileDomain2.setFilePath("/path/to/file");
@@ -142,13 +141,13 @@ class ComFileMetaServiceImplSpringTest {
 
         // Arrange
         // 파일 메타 정보 삽입
-        comFileDomain = new ComFileDomain();
+        comFileDomain = ComFileDomain.builder().build();
         comFileDomain.setFileUpldNm("testFileUpload1.txt");
         comFileDomain.setFileOrignNm("testFileUpload1.txt");
         comFileDomain.setFilePath("/path/to/file");
         String idx = comFileMetaService.insertFileMeta(comFileDomain);  // 먼저 삽입해야 조회가 가능합니다.
 
-        ComFileDomain comFileDomain2 = new ComFileDomain();
+        ComFileDomain comFileDomain2 = ComFileDomain.builder().build();
         comFileDomain2.setFileUpldNm("testFileUpload2.txt");
         comFileDomain2.setFileOrignNm("testFileUpload2.txt");
         comFileDomain2.setFilePath("/path/to/file");

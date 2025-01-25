@@ -37,9 +37,10 @@ class ComFileLocalUploadServiceMockingTest {
     void testUploadFileSuccess() throws IOException {
         // given
         String filePath = "test-file.txt";
+        String fileName = "test-file.txt";
 
         // when
-        boolean result = comFileUploadService.uploadFile(file, filePath);
+        boolean result = comFileUploadService.uploadFile(file, filePath,fileName);
 
         // then
         assertTrue(result);

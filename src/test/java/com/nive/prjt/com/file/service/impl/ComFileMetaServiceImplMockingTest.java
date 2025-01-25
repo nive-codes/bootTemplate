@@ -31,7 +31,7 @@ class ComFileMetaServiceImplMockingTest {
 
     @BeforeEach
     public void setUp() {
-        comFileDomain = new ComFileDomain();
+        comFileDomain = ComFileDomain.builder().build();
         comFileDomain.setFileId("FILE_0001");
         comFileDomain.setFileSeq(1);
         comFileDomain.setFilePath("/path/to/file");

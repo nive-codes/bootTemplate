@@ -37,10 +37,11 @@ class ComFileS3UploadServiceSpringTest {
         MockMultipartFile mockMultipartFile = new MockMultipartFile(
                 "file", "test-upload.txt", "text/plain", content.getBytes());
 
-        String filePath = "test/test-upload.txt";  // S3에 저장될 경로
+        String filePath = "/test";  // S3에 저장될 경로
+        String fileName = "test-upload.txt";  // S3에 저장될 경로
 
         // 실제 업로드 테스트
-        boolean uploadResult = comFileUploadService.uploadFile(mockMultipartFile, filePath);
+        boolean uploadResult = comFileUploadService.uploadFile(mockMultipartFile, filePath,fileName);
 
         // 업로드가 성공적으로 되었는지 확인
         assertTrue(uploadResult);

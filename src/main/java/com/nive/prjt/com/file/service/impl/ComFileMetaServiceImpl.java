@@ -1,6 +1,7 @@
 package com.nive.prjt.com.file.service.impl;
 
 import com.nive.prjt.com.file.domain.ComFileDomain;
+import com.nive.prjt.com.file.domain.ComFileTempDomain;
 import com.nive.prjt.com.file.mapper.ComFileMetaMapper;
 import com.nive.prjt.com.file.service.ComFileMetaService;
 import com.nive.prjt.com.idgen.ComTableIdGnrService;
@@ -24,6 +25,14 @@ public class ComFileMetaServiceImpl implements ComFileMetaService {
     private final ComFileMetaMapper comFileMetaMapper;
     private final ComTableIdGnrService fileIdGenService;
 
+    @Override
+    public String insertFileMeta(ComFileTempDomain comFileTempDomain) {
+        ComFileDomain comFileDomain = ComFileDomain.builder().build();
+
+        comFileMetaMapper.insertFileMeta(comFileDomain);
+        return "";
+    }
+
 
     @Override
     public String insertFileMeta(ComFileDomain comFileDomain) {
@@ -33,12 +42,11 @@ public class ComFileMetaServiceImpl implements ComFileMetaService {
         return id;
     }
 
+
     @Override
     public void updateFileMeta(ComFileDomain comFileDomain) {
-//        int fileSeq = comFileMetaMapper.selectMaxFileSeq(comFileDomain.getFileId());
-//        comFileDomain.setFileSeq(fileSeq);
-        /*mybatis에서 update 처리*/
-        comFileMetaMapper.updateFileMeta(comFileDomain);
+        /*기존 fileId로 update처리*/
+        comFileMetaMapper.insertFileMeta(comFileDomain);
 
     }
 
