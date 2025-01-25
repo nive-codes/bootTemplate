@@ -3,6 +3,17 @@ SpringBoot 4.3.1 + Gradle + Mybatis Web Application Template
 
 
 
+## 2025.01.25
+### 작업 예정
+1. interceptor를 통한 접속자 구분 처리
+2. 파일업로드 비동기 처리 후 fileId return -> memberService insert, update 메소드와 연계 처리
+
+### 작업 내용
+1. 파일업로드 service -> RestController를 통한 비동기 처리
+2. 파일 업로드 샘플 thymeleaf 생성중
+4. 예외처리(@RestControllerAdvice) rest api handler ResponseBody 추가(json 내려주기)
+-> 애노테이션 달지 않으면 view찾는 문제 발생 해결
+
 ## 2025.01.22
 ### 작업 예정
 1. interceptor를 통한 접속자 구분 처리
@@ -11,8 +22,8 @@ SpringBoot 4.3.1 + Gradle + Mybatis Web Application Template
 ### 작업 내용
 1. 파일업로드 관련 mvc 샘플 작성 및 QA
 2. MemberService 테스트 케이스 작성
-2. MemberService Spring 테스트 케이스 작성
-3. MemberController thymeleaf 작업
+3. MemberService Spring 테스트 케이스 작성
+4. MemberController thymeleaf 작업
 
 ## 2025.01.21
 ### 작업 예정
