@@ -95,7 +95,7 @@ public class GlobalsMvcExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleNoResourceFoundException(NoResourceFoundException ex, Model model) {
         if (ex.getMessage().contains("favicon.ico")) {
-            log.warn("favicon.ico 리소스가 존재하지 않습니다. 예외를 무시합니다.");
+//            log.warn("favicon.ico 리소스가 존재하지 않습니다. 예외를 무시합니다.");
             return null;  // 예외를 무시하고 아무것도 반환하지 않음
         }
 

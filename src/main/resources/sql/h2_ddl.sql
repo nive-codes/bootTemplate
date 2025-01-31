@@ -80,3 +80,22 @@ create table member_tb(
     del_id varchar(50) ,
     del_ip_addr varchar(15)
 )
+
+
+/*interceptor 로깅용*/
+CREATE TABLE com_access_logs (
+  log_id BIGINT AUTO_INCREMENT PRIMARY KEY, -- H2에서 AUTO_INCREMENT는 IDENTITY 사용
+  request_time BIGINT NOT NULL,
+  ip_address VARCHAR(20),
+  os_info varchar(100),
+  user_agent VARCHAR(255),
+  request_url VARCHAR(1000),
+  query_string TEXT,
+  request_method VARCHAR(10),
+  status_code INT,
+  processing_time BIGINT,
+  session_id VARCHAR(255),
+  user_id VARCHAR(255),
+  headers TEXT, -- 추가 헤더 정보 (옵션)
+  crt_dt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

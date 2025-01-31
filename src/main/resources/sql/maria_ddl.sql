@@ -81,3 +81,19 @@ create table member_tb(
 
 
 
+CREATE TABLE request_logs (
+                              log_id BIGINT AUTO_INCREMENT PRIMARY KEY, -- MariaDB에서는 AUTO_INCREMENT 사용
+                              request_time BIGINT,
+                              ip_address VARCHAR(20),
+                              os_info varchar(100),
+                              user_agent VARCHAR(255),
+                              request_url VARCHAR(255),
+                              query_string TEXT,
+                              request_method VARCHAR(10),
+                              status_code INT,
+                              processing_time BIGINT,
+                              session_id VARCHAR(255),
+                              user_id VARCHAR(255),
+                              headers TEXT, -- 추가 헤더 정보 (옵션)
+                              crt_dt datetime default now()
+) comment '접속로그 관리용'

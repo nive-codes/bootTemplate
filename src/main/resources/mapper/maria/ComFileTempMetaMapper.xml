@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nive.prjt.com.file.mapper.ComFileTempMetaMapper"> <!--yml에서 alias 설정을 통해 줄일 수 있음.-->
+
+
+    <insert id="insertFileTempMeta" parameterType="com.nive.prjt.com.file.domain.ComFileTempDomain" useGeneratedKeys="true" keyProperty="tempId">
+        <!-- fileSeq 값 동적 생성 -->
+        <selectKey keyProperty="fileSeq" resultType="int" order="BEFORE">
+            SELECT COALESCE(MAX(file_seq), 0) + 1
+            FROM com_file_temp
+            WHERE file_id = #{fileId}
+        </selectKey>
+
+        INSERT INTO com_file_temp (
+        file_id,
+        file_seq,
+        file_upld_nm,
+        file_orign_nm,
+        file_path,
+        file_module,
+        file_ord,
+        file_size,
+        file_status,
+        crt_dt,
+        crt_id,
+        crt_ip_addr
+        ) VALUES (
+        #{fileId},
+        #{fileSeq},
+        #{fileUpldNm},
+        #{fileOrignNm},
+        #{filePath},
+        #{fileModule},
+        #{fileOrd},
+        #{fileSize},
+        #{fileStatus},
+        NOW(),
+        #{crtId},
+        #{crtIpAddr}
+        )
+    </insert>
+
+<!--    Temp meta update status-->
+    <update id="updateFileTempMeta" parameterType="com.nive.prjt.com.file.domain.ComFileTempDomain" >
+
+        UPDATE COM_FILE_TEMP SET
+             FILE_STATUS = #{fileStatus},
+             upd_dt = now(),
+             upd_id = #{updId},
+             upd_ip_addr = #{updIpAddr}
+            
+    </update>
+
+
+
+    <select id="selectLatestFileTempMeta" resultType="com.nive.prjt.com.file.domain.ComFileTempDomain">
+        SELECT
+           temp_id,
+           file_id,
+           file_seq,
+           file_upld_nm,
+           file_orign_nm,
+           file_path,
+           file_module,
+           file_ord,
+           file_size,
+           file_status,
+           expire_dt,
+           crt_dt,
+           crt_id,
+           crt_ip_addr,
+           upd_dt
+        FROM COM_FILE_TEMP
+        WHERE file_id = #{fileId}
+          AND DEL_YN = 'N'
+        ORDER BY file_seq DESC
+            LIMIT 1
+    </select>
+
+    <select id="selectFileTempMeta" resultType="com.nive.prjt.com.file.domain.ComFileTempDomain">
+        SELECT
+            temp_id,
+            file_id,
+            file_seq,
+            file_upld_nm,
+            file_orign_nm,
+            file_path,
+            file_module,
+            file_ord,
+            file_size,
+            file_status,
+            expire_dt,
+            crt_dt,
+            crt_id,
+            crt_ip_addr,
+            upd_dt
+        FROM COM_FILE_TEMP
+        WHERE file_id = #{fileId}
+        AND file_seq = #{fileSeq}
+
+    </select>
+
+    <select id="selectLatestFileTempMetaPath" resultType="java.lang.String">
+        SELECT
+            concat(concat(file_path,'/'),file_upld_nm)
+        FROM com_file_temp
+        WHERE file_id = #{fileId}
+          AND DEL_YN = 'N'
+          ORDER BY file_seq DESC
+    </select>
+
+    <select id="selectFileMetaTempPath" resultType="java.lang.String">
+        SELECT
+            concat(concat(file_path,'/'),file_upld_nm)
+        FROM com_file_temp
+        WHERE file_id = #{fileId}
+        AND file_seq = #{fileSeq}
+        AND DEL_YN = 'N'
+    </select>
+
+    <select id="selectFileTempMetaList" resultType="com.nive.prjt.com.file.domain.ComFileTempDomain">
+        SELECT
+            file_id,
+            file_seq,
+            file_upld_nm,
+            file_orign_nm,
+            file_path,
+            file_module,
+            file_ord,
+            file_size,
+            del_yn,
+            crt_dt,
+            crt_id,
+            crt_ip_addr,
+            upd_dt,
+            upd_id,
+            upd_ip_addr,
+            del_dt,
+            del_id,
+            del_ip_addr
+        FROM com_file_temp
+        WHERE file_id = #{fileId}
+        order by file_seq desc
+    </select>
+
+
+    <select id="selectFileTempMetaListCount" resultType="int">
+        SELECT
+            count(*)
+        FROM com_file_temp
+        WHERE file_id = #{fileId}
+    </select>
+
+    <delete id="deleteFileTempMeta" parameterType="com.nive.prjt.com.file.domain.ComFileTempDomain" >
+        DELETE FROM com_file_temp where file_id = #{fileId} and file_seq = #{fileSeq}
+    </delete>
+
+
+
+
+</mapper>
