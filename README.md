@@ -2,6 +2,17 @@
 SpringBoot 4.3.1 + Gradle + Mybatis Web Application Template
 
 
+## 2025.01.31
+### 작업 예정
+1. interceptor를 통한 접속자 구분 처리
+2. 파일업로드 비동기 처리 후 fileId return -> memberService insert, update 메소드와 연계 처리
+3. 파일 업로드 invalid(com_file 이전 실패 시) 
+
+### 작업 내용
+1. 파일 업로드 / 삭제 샘플 thymeleaf 완료
+2. 파일 삭제 로직 테스트 완료
+
+
 
 ## 2025.01.25
 ### 작업 예정
