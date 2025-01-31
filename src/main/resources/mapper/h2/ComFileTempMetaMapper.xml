@@ -97,7 +97,6 @@
         FROM COM_FILE_TEMP
         WHERE file_id = #{fileId}
         AND file_seq = #{fileSeq}
-        AND DEL_YN = 'N'
 
     </select>
 
@@ -141,7 +140,6 @@
             del_ip_addr
         FROM com_file_temp
         WHERE file_id = #{fileId}
-          AND DEL_YN = 'N'
         order by file_seq desc
     </select>
 
@@ -151,9 +149,11 @@
             count(*)
         FROM com_file_temp
         WHERE file_id = #{fileId}
-          AND DEL_YN = 'N'
     </select>
 
+    <delete id="deleteFileTempMeta" parameterType="com.nive.prjt.com.file.domain.ComFileTempDomain" >
+        DELETE FROM com_file_temp where file_id = #{fileId} and file_seq = #{fileSeq}
+    </delete>
 
 
 

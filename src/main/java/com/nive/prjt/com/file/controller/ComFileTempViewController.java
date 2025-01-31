@@ -14,16 +14,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 
 @Controller
-@RequestMapping("/view/tempFiles")
+@RequestMapping("/tempFiles")
 public class ComFileTempViewController {
 
 
     @GetMapping("/dropZoneTest")
     public String dropZoneTest(Model model) {
-        ComFileTempDomain comFileTempDomain = ComFileTempDomain.builder().fileType("IMAGE").fileSize(10L).filePath("tempTest").build();
-        comFileTempDomain.setFileType("IMAGE");
-        comFileTempDomain.setFileSize(10L);
-        comFileTempDomain.setFilePath("tempTest");
+        //   파일 업로드 제한 요건 처리
+        ComFileTempDomain comFileTempDomain = ComFileTempDomain.builder()
+                .fileType("IMAGE")
+                .fileSize(10L)
+                .filePath("tempTest").build();
+
 
 
         model.addAttribute("fileUploadInfo", comFileTempDomain);

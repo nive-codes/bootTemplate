@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -68,8 +69,19 @@ public class ComFileTempRestServiceImpl implements ComFileTempRestService {
     }
 
     @Override
-    public void deleteFileTemp(ComFileTempDomain comFileTempDomain) {
+    public void deleteFileTemp(String fileId, ComFileTempDomain comFileTempDomain) {
         /*file_id 와 file_seq를 가지고 파일 임시 테이블 조회 경로 확인 -> 파일 삭제 -> 데이터 삭제*/
+
+        if(Objects.isNull(comFileTempDomain.getFileId()) || comFileTempDomain.getFileId().isBlank()){
+            log.error("파일 삭제 : fileId : {} 요청 - comFileTempDomain file 데이터가 없습니다.", fileId);
+            throw new BusinessException("파일 삭제 fileId : "+ fileId +"는 요청되었으나 comFileTempDomain의 fileId가 존재하지 않습니다.",ApiCode.VALIDATION_FAILED);
+        }
+
+        if(!fileId.equals(comFileTempDomain.getFileId())){
+            log.error("파일 삭제 : fileId : {} 요청과 comFileTempDomain fileId : {} 데이터가 일치 하지 않습니다.", fileId, comFileTempDomain.getFileId());
+            throw new BusinessException("파일 삭제 fileId : "+ fileId +"는 요청되었으나 comFileTempDomain의 fileId가 존재하지 않습니다.",ApiCode.VALIDATION_FAILED);
+        }
+
 
         //   file_id와 file_seq에 해당하는 데이터 조회
         ComFileTempDomain result = comFileTempMetaService.selectFileTempMeta(comFileTempDomain.getFileId(), comFileTempDomain.getFileSeq());
@@ -99,7 +111,7 @@ public class ComFileTempRestServiceImpl implements ComFileTempRestService {
         }
 
         comFileTempMetaService.deleteFileTempMeta(result);
-        log.info("TEMP 메타 데이터 및 파일 삭제 성공. file_id: {}, file_seq: {}",
+        log.info("TEMP 메타 데이터 및 파일 삭제 성공(DELETE). file_id: {}, file_seq: {}",
                 comFileTempDomain.getFileId(), comFileTempDomain.getFileSeq());
 
     }

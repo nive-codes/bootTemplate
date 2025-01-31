@@ -43,7 +43,7 @@ public class ComFileLocalUploadService implements ComFileUploadService {
             log.info("targetPath : "+targetPath);
             Files.createDirectories(targetPath.getParent()); // 경로가 없을 경우 생성
             file.transferTo(targetPath.toFile()); // 파일 저장
-            log.info("파일 업로드 성공: {}", filePath);
+            log.info("파일 업로드 성공: {}", targetPath);
             return true;
         } catch (IOException e) {
             log.error("파일 업로드 실패: {}", filePath, e);

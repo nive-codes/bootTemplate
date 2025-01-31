@@ -113,7 +113,7 @@ class ComFileTempRestServiceImplTest {
         when(comFileUploadService.deleteFile(any())).thenReturn(true);
 
         // Act
-        comFileTempRestServiceImpl.deleteFileTemp(comFileTempDomain);
+        comFileTempRestServiceImpl.deleteFileTemp("testFileId",comFileTempDomain);
 
         // Assert
         verify(comFileTempMetaService, times(1)).deleteFileTempMeta(any());
@@ -127,7 +127,7 @@ class ComFileTempRestServiceImplTest {
 
         // Act & Assert
         BusinessException thrown = assertThrows(BusinessException.class, () -> {
-            comFileTempRestServiceImpl.deleteFileTemp(comFileTempDomain);
+            comFileTempRestServiceImpl.deleteFileTemp("testFileId",comFileTempDomain);
         });
 
         assertEquals("TEMP 테이블의 데이터를 찾을 수 없습니다", thrown.getMessage());
@@ -143,7 +143,7 @@ class ComFileTempRestServiceImplTest {
 
         // Act & Assert
         BusinessException thrown = assertThrows(BusinessException.class, () -> {
-            comFileTempRestServiceImpl.deleteFileTemp(comFileTempDomain);
+            comFileTempRestServiceImpl.deleteFileTemp("testFileId",comFileTempDomain);
         });
 
         assertEquals("존재하는 파일 삭제하지 못했습니다.", thrown.getMessage());

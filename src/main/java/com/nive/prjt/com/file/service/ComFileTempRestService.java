@@ -21,6 +21,6 @@ public interface ComFileTempRestService {
      * 임시 테이블의 데이터 삭제 및 실제 파일 삭제(임시 파일까지 삭제처리를 한다)
      * @param comFileTempDomain
      */
-    void deleteFileTemp(ComFileTempDomain comFileTempDomain);
+    void deleteFileTemp(String fileId, ComFileTempDomain comFileTempDomain);
 
 }
