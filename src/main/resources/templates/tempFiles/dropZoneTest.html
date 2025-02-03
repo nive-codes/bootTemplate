@@ -19,10 +19,23 @@
     var upldFilePath = '[[${fileUploadInfo.filePath}]]' ;  // 업로드할 파일 경로 (백엔드에서 파일 경로 정보)
 
 
+    let fileExtValidate = "*";  // 기본값은 모든 파일 타입
+
+    // IMAGE일 때만 해당 확장자 배열을 사용
+    if (upldFileType === 'IMAGE') {
+        fileExtValidate = ["jpg", "jpeg", "png", "gif", "bmp"].join(","); // IMAGE 타입의 확장자들
+    } else if (upldFileType === 'DOCUMENT') {
+        fileExtValidate = ["pdf", "doc", "docx", "txt", "hwp", "hwpx", "xls", "xlsx"].join(",");
+    } else if (upldFileType === 'VIDEO') {
+        fileExtValidate = ["mp4", "avi", "mkv"].join(",");
+    } else if (upldFileType === 'AUDIO') {
+        fileExtValidate = ["mp3", "wav", "aac"].join(",");
+    }
+
     Dropzone.options.myDropzone = {
         url: "/api/tempFiles/upload",  // 파일 업로드 처리 URL
-        maxFilesize: upldFileType,  // 최대 파일 크기 10MB
-        acceptedFiles: upldFileType === 'IMAGE' ? "image/*" : "*",  // fileType에 따라 이미지만 허용
+        maxFilesize: upldFileSize,  // 최대 파일 크기 10MB
+        // acceptedFiles:  fileExtValidate,  // fileType에 따라 이미지만 허용
         method : 'post',
         paramName: 'files', // 서버에서 사용할 formdata 이름 설정 (default는 file)
         addRemoveLinks: true,   //삭제 버튼 활성화
@@ -54,6 +67,7 @@
             });
             // 파일 업로드 실패 시 동작
             this.on("error", function(file, errorMessage) {
+                console.log(errorMessage)
                 console.error("파일 업로드 실패:", errorMessage);
             });
             // 파일 삭제 시 동작

@@ -1,7 +1,6 @@
 package com.nive.prjt.config;
 
 import com.nive.prjt.config.interceptor.logging.ComLoggingInterceptor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -27,7 +26,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(comLoggingInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/favicon.ico","/css/**","js/**","/upload/**","/images/**");
+                .excludePathPatterns("/favicon.ico","/css/**", "static/js/**","/upload/**","/images/**");
     }
 
 }

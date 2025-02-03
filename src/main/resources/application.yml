@@ -13,6 +13,10 @@ spring:
     type-aliases-package: com.nive.prjt.nive.*.domain
     configuration:
       map-underscore-to-camel-case: true
+  servlet:
+    multipart:
+      max-file-size: 10MB #하나에 10MB
+      max-request-size: 10MB  #한 요청에 10MB
 
 
 --- #테스트 버전의 환경정보 설정

@@ -45,6 +45,7 @@ public class ComFileTempRestServiceImpl implements ComFileTempRestService {
         for (MultipartFile file : files) {
 
             //   파일 검증 완료 후
+            /*TODO 잘못된 파일인 경우 에러메세지 세분화 처리 - ex) document인데 img파일 업로드 했는 경우 세분화된 메세지 안내*/
             if(validateFile(file,comFileTempDomain.getFileType(), comFileTempDomain.getFileSize())){
 
                 //   comFileTempDomain  생성

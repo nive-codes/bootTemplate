@@ -34,6 +34,8 @@ public class MemberDomain {
 
         private String fileId;
 
+        private String fileId2;
+
         private String delYn;
 
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm") // 날짜 포맷 설정

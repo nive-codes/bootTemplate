@@ -1,6 +1,7 @@
 package com.nive.prjt.com.file.controller;
 
 import com.nive.prjt.com.file.domain.ComFileTempDomain;
+import com.nive.prjt.com.file.service.ComFileType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

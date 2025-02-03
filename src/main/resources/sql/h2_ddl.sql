@@ -69,6 +69,7 @@ create table member_tb(
     tellNo varchar(15),
     email varchar(20),
     file_id varchar(50),
+    file_id2 varchar(50),
     del_yn varchar(1) default 'N',
     crt_dt timestamp ,
     crt_id varchar(50) ,

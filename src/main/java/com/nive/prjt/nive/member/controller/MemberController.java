@@ -1,5 +1,7 @@
 package com.nive.prjt.nive.member.controller;
 
+import com.nive.prjt.com.file.service.ComFileType;
+import com.nive.prjt.config.response.ApiCode;
 import com.nive.prjt.nive.member.domain.MemberDomain;
 import com.nive.prjt.nive.member.service.MemberService;
 import jakarta.validation.Valid;
@@ -34,6 +36,7 @@ public class MemberController {
     @GetMapping("/insertForm")
     public String insertForm(Model model, MemberDomain memberDomain) {
         model.addAttribute("memberDomain", memberDomain);
+
         model.addAttribute("formFlag","Y"); //insert flag
         return "member/memberForm";
     }

@@ -67,6 +67,7 @@ create table member_tb(
                           tellNo varchar(15)        comment '전화번호',
                           email varchar(20)         comment '이메일',
                           file_id varchar(50)       comment '첨부파일ID',
+                          file_id2 varchar(50)      comment '첨부파일ID2',
                           del_yn varchar(1)                 default 'N',
                           crt_dt datetime           comment '등록일',
                           crt_id varchar(50)        comment '등록자',
