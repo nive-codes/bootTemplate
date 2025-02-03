@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * @author hosikchoi
+ * @author nive
  * @class ComFileTempTestController
  * @desc temp 파일 업로드 비동기 테스트 뷰(dropzone)
  * @since 2025-01-23

@@ -23,7 +23,7 @@
                 #{tellNo},
                 #{email},
                 #{fileId},
-                #{file_id2},
+                #{fileId2},
                 NOW(),
                 #{crtId},
                 #{crtIpAddr}

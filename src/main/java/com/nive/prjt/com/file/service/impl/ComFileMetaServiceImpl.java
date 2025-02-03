@@ -27,13 +27,22 @@ public class ComFileMetaServiceImpl implements ComFileMetaService {
 
     @Override
     public String insertFileMeta(ComFileTempDomain comFileTempDomain) {
-        ComFileDomain comFileDomain = ComFileDomain.builder().build();
+        ComFileDomain comFileDomain = ComFileDomain.builder()
+                .fileId(comFileTempDomain.getFileId())
+                .filePath(comFileTempDomain.getFilePath())
+                .fileSize(comFileTempDomain.getFileSize())
+                .fileOrd(comFileTempDomain.getFileOrd())
+                .fileUpldNm(comFileTempDomain.getFileUpldNm())
+                .fileOrignNm(comFileTempDomain.getFileOrignNm())
+                .fileModule(comFileTempDomain.getFileModule())
+                .build();
 
         comFileMetaMapper.insertFileMeta(comFileDomain);
-        return "";
+        return comFileDomain.getFileId();
     }
 
 
+    /*TODO 사용안함--삭제예정*/
     @Override
     public String insertFileMeta(ComFileDomain comFileDomain) {
         String id = fileIdGenService.getNextId();

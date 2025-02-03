@@ -21,6 +21,7 @@
         file_ord,
         file_size,
         file_status,
+        expire_dt,
         crt_dt,
         crt_id,
         crt_ip_addr
@@ -33,46 +34,67 @@
         #{fileModule},
         #{fileOrd},
         #{fileSize},
-        #{fileStatus},
+        'PENDING',
+        DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 12 HOUR),
         NOW(),
         #{crtId},
         #{crtIpAddr}
         )
     </insert>
 
-<!--    Temp meta update status-->
-    <update id="updateFileTempMeta" parameterType="com.nive.prjt.com.file.domain.ComFileTempDomain" >
+    <!--    Temp meta update status-->
+    <!--처리 대기 상태의 값을 valid, invalid로 처리-->
+    <update id="updateFileTempMetaStatus" parameterType="com.nive.prjt.com.file.domain.ComFileTempDomain" >
 
         UPDATE COM_FILE_TEMP SET
-             FILE_STATUS = #{fileStatus},
-             upd_dt = now(),
-             upd_id = #{updId},
-             upd_ip_addr = #{updIpAddr}
-            
+        FILE_STATUS = #{fileStatus}
+        , upd_dt = now()
+        , upd_id = #{updId}
+        , upd_ip_addr = #{updIpAddr}
+        <if test="fileStatus == 'VALID'">
+            , transfer_dt = now()
+        </if>
+        <if test="fileStatus == 'INVALID'">
+            ,invalid_dt = now()
+            ,invalid_reason = #{invalidReason}
+        </if>
+        WHERE file_id = #{fileId}
+        AND file_seq = #{fileSeq}
+        AND file_status = 'PENDING'
+
     </update>
+
+    <!--시간이 지난 데이터를 invalid로 처리 batch1-->
+
+    <!--invalid를 delete 처리 batch2-->
+
+    <!--valid된 것을 delete 처리 batch3-->
+
 
 
 
     <select id="selectLatestFileTempMeta" resultType="com.nive.prjt.com.file.domain.ComFileTempDomain">
         SELECT
-           temp_id,
-           file_id,
-           file_seq,
-           file_upld_nm,
-           file_orign_nm,
-           file_path,
-           file_module,
-           file_ord,
-           file_size,
-           file_status,
-           expire_dt,
-           crt_dt,
-           crt_id,
-           crt_ip_addr,
-           upd_dt
+            temp_id,
+            file_id,
+            file_seq,
+            file_upld_nm,
+            file_orign_nm,
+            file_path,
+            file_module,
+            file_ord,
+            file_size,
+            file_status,
+            expire_dt,
+            invalid_dt,
+            transfer_dt,
+            crt_dt,
+            crt_id,
+            crt_ip_addr,
+            upd_dt
         FROM COM_FILE_TEMP
         WHERE file_id = #{fileId}
-          AND DEL_YN = 'N'
+          AND file_status = 'PENDING'
         ORDER BY file_seq DESC
             LIMIT 1
     </select>
@@ -90,13 +112,15 @@
             file_size,
             file_status,
             expire_dt,
+            invalid_dt,
+            transfer_dt,
             crt_dt,
             crt_id,
             crt_ip_addr,
             upd_dt
         FROM COM_FILE_TEMP
         WHERE file_id = #{fileId}
-        AND file_seq = #{fileSeq}
+          AND file_seq = #{fileSeq}
 
     </select>
 
@@ -105,8 +129,7 @@
             concat(concat(file_path,'/'),file_upld_nm)
         FROM com_file_temp
         WHERE file_id = #{fileId}
-          AND DEL_YN = 'N'
-          ORDER BY file_seq DESC
+        ORDER BY file_seq DESC
     </select>
 
     <select id="selectFileMetaTempPath" resultType="java.lang.String">
@@ -114,12 +137,12 @@
             concat(concat(file_path,'/'),file_upld_nm)
         FROM com_file_temp
         WHERE file_id = #{fileId}
-        AND file_seq = #{fileSeq}
-        AND DEL_YN = 'N'
+          AND file_seq = #{fileSeq}
     </select>
 
     <select id="selectFileTempMetaList" resultType="com.nive.prjt.com.file.domain.ComFileTempDomain">
         SELECT
+            temp_id,
             file_id,
             file_seq,
             file_upld_nm,
@@ -128,18 +151,19 @@
             file_module,
             file_ord,
             file_size,
-            del_yn,
+            file_status,
+            invalid_dt,
+            transfer_dt,
+            expire_dt,
             crt_dt,
             crt_id,
             crt_ip_addr,
             upd_dt,
             upd_id,
-            upd_ip_addr,
-            del_dt,
-            del_id,
-            del_ip_addr
+            upd_ip_addr
         FROM com_file_temp
         WHERE file_id = #{fileId}
+          and file_status = 'PENDING'
         order by file_seq desc
     </select>
 

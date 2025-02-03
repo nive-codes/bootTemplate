@@ -1,11 +1,14 @@
 package com.nive.prjt.nive.member.service;
 
+import com.nive.prjt.com.file.service.ComFileRestService;
 import com.nive.prjt.com.file.service.ComFileType;
 import com.nive.prjt.com.idgen.ComTableIdGnrService;
 import com.nive.prjt.config.exception.business.BusinessException;
+import com.nive.prjt.config.response.ApiCode;
 import com.nive.prjt.nive.member.domain.MemberDomain;
 import com.nive.prjt.nive.member.mapper.MemberMapper;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,10 +26,12 @@ import java.util.Objects;
 @Service
 @AllArgsConstructor
 @Transactional
+@Slf4j
 public class MemberServiceImpl implements MemberService {
 
     private final MemberMapper memberMapper;
     private final ComTableIdGnrService memberIdGenService;
+    private final ComFileRestService comFileRestService;
 
 
     @Override
@@ -44,20 +49,15 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public String insertMember(MemberDomain member, MultipartHttpServletRequest request) {
 
-//        List<MultipartFile> files1 = request.getFiles("file1");
-//
-//        List<MultipartFile> files2 = request.getFiles("file2");
-//        화면단에서 name file로 하면 여기에 모두 들어온다...
-//        List<MultipartFile> files = request.getFiles("file");
-
-        return null;
+        /*파일 검증 로직 처리*/
+       comFileRestService.transferFile(member.getFileId(),ComFileType.IMAGE,10L,5,"member");
+       comFileRestService.transferFile(member.getFileId2(),ComFileType.DOCUMENT,10L,5,"member");
 
 
-//        member.setFileId(fileId);
-//        String memberId = memberIdGenService.getNextId();
-//        member.setMemberId(memberId);
-//        memberMapper.insertMember(member);
-//        return memberId;
+        String memberId = memberIdGenService.getNextId();
+        member.setMemberId(memberId);
+        memberMapper.insertMember(member);
+        return memberId;
 
     }
 

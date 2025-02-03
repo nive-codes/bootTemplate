@@ -18,23 +18,15 @@ public class BusinessException extends RuntimeException {
     private final String returnView;   // 에러 처리 후 리턴할 뷰 (MVC용)  기본적으로 /error/500 활용
     private final String errorCode;    // API 응답에 사용할 에러 코드 (REST API용)
     private final HttpStatus httpStatus;  // HTTP 상태 코드 (REST API용)
-
+    private final Object data;          // return 데이터 객체
     private final ApiCode apiCode;  //ApiCode의 집합체
 
-    /**
-     * 1. message만 있는 경우
-     * 기본적으로 ApiCode.INTERNAL_SERVER_ERROR를 사용
-     * MVC에서 처리되었을 때 반환할 에러 뷰는 기본적으로 "/error/500"을 사용합니다.
-     */
+    // 1. message만 있는 경우 (기본적으로 data는 null로 설정)
     public BusinessException(String message) {
-        this(message, "/error/500", ApiCode.INTERNAL_SERVER_ERROR);  // 기본값 설정
+        this(message, "/error/500", ApiCode.INTERNAL_SERVER_ERROR, null);  // 기본값 설정
     }
 
-    /**
-     * 2. ApiCode만 있는 경우
-     * ApiCode에서 메시지와 에러 코드, 상태 코드를 모두 가져옴(뷰는 error/500 default 설정)
-     * 이 생성자는 주로 REST API에서 사용됩니다.
-     */
+    // 2. ApiCode만 있는 경우 (기본적으로 data는 null로 설정)
     public BusinessException(ApiCode apiCode) {
         super(apiCode.getMessage());
         this.message = apiCode.getMessage();
@@ -42,50 +34,25 @@ public class BusinessException extends RuntimeException {
         this.errorCode = apiCode.getCode();
         this.httpStatus = apiCode.getStatus();
         this.apiCode = apiCode;
+        this.data = null;
     }
 
-    /**
-     * 3. message와 returnView만 있는 경우
-     * 기본적으로 ApiCode.INTERNAL_SERVER_ERROR를 사용
-     * 이 생성자는 주로 MVC에서 에러 뷰를 반환할 때 사용됩니다.
-     * returnView가 "/error/500"을 기본값으로 사용하며, 이 뷰는 MVC에서 화면을 표시할 때 활용됩니다.
-     */
+    // 3. message와 returnView만 있는 경우
     public BusinessException(String message, String returnView) {
-        super(message);
-        this.message = message;
-        this.returnView = returnView != null ? returnView : "/error/500";  // 기본값 설정
-        this.errorCode = ApiCode.INTERNAL_SERVER_ERROR.getCode();  // 기본 에러 코드
-        this.httpStatus = ApiCode.INTERNAL_SERVER_ERROR.getStatus();  // 기본 상태 코드
-        this.apiCode = ApiCode.INTERNAL_SERVER_ERROR;
+        this(message, returnView, ApiCode.INTERNAL_SERVER_ERROR, null);  // 기본값 설정
     }
 
-    /**
-     * 4. message와 ApiCode만 있는 경우
-     * ApiCode에서 상태 코드와 에러 코드 가져옴
-     * 이 생성자는 주로 REST API에서 사용되며, API 응답을 처리하는 데 사용됩니다.(클라이언트 특정 메세지 반환)
-     */
+    // 4. message와 ApiCode만 있는 경우
     public BusinessException(String message, ApiCode apiCode) {
-        this(message, "/error/500", apiCode);  // 기본적으로 view는 "/error/500"을 사용
+        this(message, "/error/500", apiCode, null);  // 기본적으로 view는 "/error/500"
     }
 
-    /**
-     * 5. message와 returnView, ApiCode만 있는 경우
-     * ApiCode에서 상태 코드와 에러 코드 가져옴
-     * 이 생성자는 MVC와 REST API 양쪽에서 사용될 수 있습니다.
-     */
+    // 5. message와 returnView, ApiCode만 있는 경우
     public BusinessException(String message, String returnView, ApiCode apiCode) {
-        super(message);
-        this.message = message;
-        this.returnView = returnView != null ? returnView : "/error/500";  // 기본값 설정
-        this.errorCode = apiCode.getCode();  // ApiCode에서 에러 코드 가져옴
-        this.httpStatus = apiCode.getStatus();  // ApiCode에서 상태 코드 가져옴
-        this.apiCode = apiCode;
+        this(message, returnView, apiCode, null);  // 기본적으로 data는 null
     }
 
-    /**
-     * 6. HTTP 상태 코드와 에러 코드, 메시지를 모두 따로 설정할 수 있는 생성자 추가
-     * REST API 응답을 처리하기 위한 생성자
-     */
+    // 6. message와 errorCode, httpStatus만 있는 경우 (기본적으로 data는 null로 설정)
     public BusinessException(String message, String errorCode, HttpStatus httpStatus) {
         super(message);
         this.message = message;
@@ -93,5 +60,33 @@ public class BusinessException extends RuntimeException {
         this.errorCode = errorCode != null ? errorCode : "INTERNAL_SERVER_ERROR"; // 기본 에러 코드
         this.httpStatus = httpStatus != null ? httpStatus : HttpStatus.INTERNAL_SERVER_ERROR; // 기본 상태 코드
         this.apiCode = ApiCode.INTERNAL_SERVER_ERROR;  // 기본 ApiCode
+        this.data = null;  // data는 null로 설정
+    }
+
+    // 7. message, ApiCode, Object data를 함께 받는 경우 (data 추가)
+    public BusinessException(String message, ApiCode apiCode, Object data) {
+        this(message, "/error/500", apiCode, data);  // data를 추가하여 호출
+    }
+
+    // 8. message, returnView, ApiCode, Object data를 모두 받는 경우
+    public BusinessException(String message, String returnView, ApiCode apiCode, Object data) {
+        super(message);
+        this.message = message;
+        this.returnView = returnView != null ? returnView : "/error/500";  // 기본값 설정
+        this.errorCode = apiCode.getCode();  // ApiCode에서 에러 코드 가져옴
+        this.httpStatus = apiCode.getStatus();  // ApiCode에서 상태 코드 가져옴
+        this.apiCode = apiCode;
+        this.data = data;  // data 설정
+    }
+
+    // 9. message, errorCode, httpStatus, Object data를 받는 경우
+    public BusinessException(String message, String errorCode, HttpStatus httpStatus, Object data) {
+        super(message);
+        this.message = message;
+        this.returnView = "/error/500";  // 기본값 설정
+        this.errorCode = errorCode != null ? errorCode : "INTERNAL_SERVER_ERROR"; // 기본 에러 코드
+        this.httpStatus = httpStatus != null ? httpStatus : HttpStatus.INTERNAL_SERVER_ERROR; // 기본 상태 코드
+        this.apiCode = ApiCode.INTERNAL_SERVER_ERROR;  // 기본 ApiCode
+        this.data = data;  // data 설정
     }
 }

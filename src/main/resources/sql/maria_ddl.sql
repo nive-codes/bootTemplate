@@ -16,7 +16,7 @@ create table com_file(
      file_ord int comment '파일순서',
      file_size int comment '파일사이즈',
      del_yn varchar(1) default 'N' comment '삭제여부',
-     thum_yn varchar(1) default 'N' comment '썸네일여부'
+     thum_yn varchar(1) default 'N' comment '썸네일여부',
      crt_dt datetime comment '등록일',
      crt_id varchar(50) comment '등록자',
      crt_ip_addr varchar(15) comment '등록자IP',
@@ -42,11 +42,13 @@ create table com_file_temp (
                                file_ord int,                             -- 파일 순서
                                file_size int,                            -- 파일 크기
                                file_status varchar(20) default 'PENDING',     -- 파일 상태 (PENDING, VALID, INVALID)
-                               expire_dt timestamp,                      -- 만료 시간 (파일 처리 유효 기간)
-                               crt_dt timestamp default current_timestamp, -- 생성 일시
+                               invalid_reason varchar(300),             --INVALID 사유
+                               transfer_dt datetime,                   --이관 시간
+                               expire_dt datetime,                      -- 만료 시각
+                               crt_dt datetime default current_datetime, -- 생성 일시
                                crt_id varchar(50),                       -- 생성자 ID
                                crt_ip_addr varchar(15),                  -- 생성자 IP 주소
-                               upd_dt timestamp,                         -- 수정 일시
+                               upd_dt datetime,                         -- 수정 일시
                                upd_id varchar(50),                       -- 수정자 ID
                                upd_ip_addr varchar(15),                  -- 수정자 IP 주소
                                primary key (temp_id)                     -- 기본 키

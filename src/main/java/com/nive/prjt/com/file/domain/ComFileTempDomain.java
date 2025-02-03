@@ -34,6 +34,9 @@ public class ComFileTempDomain {
     private String fileStatus;                  //파일 스테이터스(PENDING, VALID, INVALID)
     private String fileType;                    //검증할 파일 type
     private Date expireDt;                      //만료 시간(파일처리 유효기간, 삭제될 시간) - 스테이터스 상관 없이 정해진 시간 뒤에 삭제
+    private Date transferDt;                    //이관 된 시간
+    private Date invalidDt;                     //invalid된 시간
+    private String invalidReason;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date crtDt;                         //생성일시
     private String crtId;                       //생성자ID

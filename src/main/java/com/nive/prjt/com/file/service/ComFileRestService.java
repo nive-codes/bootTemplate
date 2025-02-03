@@ -1,7 +1,10 @@
 package com.nive.prjt.com.file.service;
 
+import com.nive.prjt.com.file.domain.ComFileDomain;
 import com.nive.prjt.com.file.domain.ComFileTempDomain;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * @author nive
@@ -12,6 +15,16 @@ import org.springframework.web.multipart.MultipartFile;
 public interface ComFileRestService {
 
     /**
+     *  TEMP에 저장된 파일 transter 처리
+     * @param fileId
+     * @param comFileType
+     * @param fileSize
+     * @param fileCnt
+     * @return
+     */
+    void transferFile(String fileId,ComFileType comFileType, Long fileSize, int fileCnt,String filePath);
+
+    /**
      * 본 테이블의 데이터를 논리삭제 처리한다.
      * @param comFileTempDomain
      */
@@ -20,17 +33,25 @@ public interface ComFileRestService {
 
     /**
      * cron 혹은 Spring batch 활용
-     * 임시 테이블의 일정시간이 지난 데이터 삭제 및 파일 삭제
+     * 논리 삭제된 항목을 일괄 meta데이터 삭제 및 파일 삭제 로직
      * @param comFileTempDomain
      */
-    void deleteExpiredTemp(ComFileTempDomain comFileTempDomain);
+    void deleteExpired(ComFileTempDomain comFileTempDomain);
 
     /**
-     * cron 혹은 spring batch 활용
-     * 본 테이블의 데이터를 물리 삭제 및 파일을 삭제한다.
-     * @param comFileTempDomain
+     * 파일 정보 목록을 조회
+     * @param fileId
+     * @return
      */
-    void deleteRealFile(ComFileTempDomain comFileTempDomain);
+    public List<ComFileDomain> selectFileMetaList(String fileId);
+
+    /**
+     * 파일 단일 정보를 조회
+     * @param fileId
+     * @param fileSeq
+     * @return
+     */
+    public ComFileDomain selectFileMeta(String fileId, int fileSeq);
 
 
 }

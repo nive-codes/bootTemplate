@@ -8,6 +8,8 @@ import com.nive.prjt.com.idgen.ComTableIdGnrService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author nive
  * @class ComFileTempMetaService
@@ -40,8 +42,9 @@ public class ComFileTempMetaServiceImpl implements ComFileTempMetaService {
 
     @Override
     public void updateFileTempStatus(ComFileTempDomain comFileTempDomain) {
-        comFileTempMetaMapper.updateFileTempMeta(comFileTempDomain);
+        comFileTempMetaMapper.updateFileTempMetaStatus(comFileTempDomain);
     }
+
 
     @Override
     public void deleteFileTempMeta(ComFileTempDomain comFileTempDomain) {
@@ -52,5 +55,10 @@ public class ComFileTempMetaServiceImpl implements ComFileTempMetaService {
     public ComFileTempDomain selectFileTempMeta(String fileId, int fileSeq) {
         return comFileTempMetaMapper.selectFileTempMeta(fileId, fileSeq);
 
+    }
+
+    @Override
+    public List<ComFileTempDomain> selectFileTempMeta(String fileId) {
+        return comFileTempMetaMapper.selectFileTempMetaList(fileId);
     }
 }

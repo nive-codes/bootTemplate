@@ -117,6 +117,21 @@ public class ComFileTempRestServiceImpl implements ComFileTempRestService {
 
     }
 
+    @Override
+    public void deleteExpiredTemp(ComFileTempDomain comFileTempDomain) {
+
+    }
+
+    @Override
+    public void deleteInvalidTemp(ComFileTempDomain comFileTempDomain) {
+
+    }
+
+    @Override
+    public void deleteCompletedTemp(ComFileTempDomain comFileTempDomain) {
+
+    }
+
 
     /**
      * 파일 upload 전 사전 검증 처리

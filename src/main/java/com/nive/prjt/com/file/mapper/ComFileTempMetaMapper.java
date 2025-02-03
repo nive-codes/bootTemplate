@@ -13,8 +13,9 @@ public interface ComFileTempMetaMapper {
     /*Temp meta insert*/
     void insertFileTempMeta(ComFileTempDomain comFileTempDomain);
 
+
     /*Temp meta update status*/
-    void updateFileTempMeta(ComFileTempDomain comFileTempDomain);
+    void updateFileTempMetaStatus(ComFileTempDomain comFileTempDomain);
 
     void deleteFileTempMeta(ComFileTempDomain comFileTempDomain);
 
@@ -26,7 +27,7 @@ public interface ComFileTempMetaMapper {
 
     String selectFileMetaTempPath(String fileId, String fileSeq);
 
-    List<ComFileDomain> selectFileTempMetaList(String fileId);
+    List<ComFileTempDomain> selectFileTempMetaList(String fileId);
 
     int selectFileTempMetaListCount(String fileId);
 

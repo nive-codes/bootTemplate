@@ -29,7 +29,8 @@ function initDropzone(upldFileDiv, upldFileId, upldFileType, upldFileSize,fileCn
             return {
                 fileType: upldFileType,
                 fileSize: upldFileSize,
-                filePath: upldFilePath
+                filePath: upldFilePath,
+                fileId: document.getElementById(upldFileId).value
             };
         },
         init: function() {

@@ -38,12 +38,13 @@
             <input type="hidden" name="fileId" id="fileId" th:value="${memberDomain.fileId}"/>
 
             <!-- 파일업로드 영역 div, file관련 id hidden input, 검증validation항목(ex-IMAGE), 용량, 개수, 업로드할 경로-->
-            <div th:insert="~{tempFiles/ComFileUpload :: fileupload('fileUpload','fileId', 'IMAGE', 10,5, 'member')}"></div>
+            <div th:insert="~{tempFiles/ComFileUpload :: fileupload('fileUpload','fileId', 'IMAGE', 10,5, 'member')}">
+
         </div>
         <div class="form-group">
             <span>파일업로드2</span>
             <input type="hidden" name="fileId2" id="fileId2" th:value="${memberDomain.fileId2}"/>
-            <div th:insert="~{tempFiles/ComFileUpload :: fileupload('fileUpload2','fileId2', 'DOCUMENT', 10,5, 'member')}"></div>
+            <div th:insert="~{tempFiles/ComFileUpload :: fileupload('fileUpload2','fileId2', 'DOCUMENT', 10,5, 'member')}">
         </div>
 
 

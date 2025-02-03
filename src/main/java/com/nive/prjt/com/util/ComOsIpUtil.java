@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
 /**
- * @author hosikchoi
+ * @author nive
  * @class ComOsIpUtil
  * @desc OS와 IP를 추출하는 util
  * @since 2025-01-31

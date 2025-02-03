@@ -2,6 +2,8 @@ package com.nive.prjt.com.file.service;
 
 import com.nive.prjt.com.file.domain.ComFileTempDomain;
 
+import java.util.List;
+
 /**
  * @author nive
  * @class ComFileTempMetaService
@@ -25,14 +27,20 @@ public interface ComFileTempMetaService {
     void updateFileTempMeta(ComFileTempDomain comFileTempDomain);
 
     /**
-     * Com_File로 넘어간 데이터, 못넘어간 데이터 status 처리
+     * Com_File로 넘어간 데이터, 못넘어간 데이터 status 처리(fileId,fileSeq)
      * @param comFileTempDomain
      */
     void updateFileTempStatus(ComFileTempDomain comFileTempDomain);
 
+    /**
+     * 사용자 요청 삭제
+     * @param comFileTempDomain
+     */
     void deleteFileTempMeta(ComFileTempDomain comFileTempDomain);
 
     ComFileTempDomain selectFileTempMeta(String fileId, int fileSeq);
+
+    List<ComFileTempDomain> selectFileTempMeta(String fileId);
 
 
 

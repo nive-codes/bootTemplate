@@ -51,6 +51,8 @@ create table com_file_temp (
                        file_ord int,                             -- 파일 순서
                        file_size int,                            -- 파일 크기
                        file_status varchar(20) default 'PENDING',     -- 파일 상태 (PENDING, VALID, INVALID)
+                       invalid_reason varchar(300),             --INVALID 사유
+                       transfer_dt timestamp,                   --이관일시
                        expire_dt timestamp,                      -- 만료 시간 (파일 처리 유효 기간)
                        crt_dt timestamp default current_timestamp, -- 생성 일시
                        crt_id varchar(50),                       -- 생성자 ID

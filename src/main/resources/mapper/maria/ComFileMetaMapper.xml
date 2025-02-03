@@ -36,40 +36,6 @@
         )
     </insert>
 
-    <!-- Insert File Meta -->
-    <insert id="updateFileMeta" parameterType="com.nive.prjt.com.file.domain.ComFileDomain">
-        <!-- 동적 시퀀스 생성 -->
-        <selectKey keyProperty="fileSeq" resultType="int" order="BEFORE">
-            SELECT COALESCE(MAX(file_seq), 0) + 1
-            FROM com_file
-            WHERE file_id = #{fileId}
-        </selectKey>
-
-        INSERT INTO com_file (
-        file_id,
-        file_seq,
-        file_upld_nm,
-        file_orign_nm,
-        file_path,
-        file_module,
-        file_ord,
-        crt_dt,
-        crt_id,
-        crt_ip_addr
-        ) VALUES (
-        #{fileId},
-        #{fileSeq},
-        #{fileUpldNm},
-        #{fileOrignNm},
-        #{filePath},
-        #{fileModule},
-        #{fileOrd},
-
-        NOW(),
-        #{crtId},
-        #{crtIpAddr}
-        )
-    </insert>
 
 
     <select id="selectLatestFileMeta" resultType="com.nive.prjt.com.file.domain.ComFileDomain">

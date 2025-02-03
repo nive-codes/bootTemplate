@@ -1,5 +1,7 @@
 package com.nive.prjt.nive.member.controller;
 
+import com.nive.prjt.com.file.domain.ComFileDomain;
+import com.nive.prjt.com.file.service.ComFileRestService;
 import com.nive.prjt.com.file.service.ComFileType;
 import com.nive.prjt.config.response.ApiCode;
 import com.nive.prjt.nive.member.domain.MemberDomain;
@@ -32,6 +34,7 @@ import java.util.Objects;
 public class MemberController {
 
     private final MemberService memberService;
+    private final ComFileRestService comFileRestService;
 
     @GetMapping("/insertForm")
     public String insertForm(Model model, MemberDomain memberDomain) {
@@ -63,13 +66,16 @@ public class MemberController {
         memberDomain = memberService.findMember(memberDomain.getMemberId());
 
         if(Objects.isNull(memberDomain)){
-            model.addAttribute("formFlag","Y");
-            model.addAttribute("errorMessage","회원 정보가 없습니다.");
-            return "member/memberForm";
+
+            model.addAttribute("message","회원 정보가 없습니다.");
+            return "member/searchForm";
         }
+        List<ComFileDomain> fileMetaList = comFileRestService.selectFileMetaList(memberDomain.getFileId());
+        List<ComFileDomain> fileMetaList2 = comFileRestService.selectFileMetaList(memberDomain.getFileId2());
 
-
-        model.addAttribute("formFlag","N"); //update flag
+        model.addAttribute("fileMetaList",fileMetaList);
+        model.addAttribute("fileMetaList2",fileMetaList2);
+        model.addAttribute("formFlag","Y");
         model.addAttribute("memberDomain",memberDomain);
         return "member/memberForm";
     }
@@ -84,6 +90,8 @@ public class MemberController {
         }
 
         memberService.updateMember(memberDomain,request);
+
+
         model.addAttribute("formFlag","N"); //update flag
         model.addAttribute("message","수정되었습니다.");
 

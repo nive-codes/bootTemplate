@@ -17,10 +17,35 @@ public interface ComFileTempRestService {
      */
     String uploadFileTemp(MultipartFile[] files, ComFileTempDomain comFileTempDomain);
 
-    /**
+    /** 사용자가 삭제 버튼
      * 임시 테이블의 데이터 삭제 및 실제 파일 삭제(임시 파일까지 삭제처리를 한다)
      * @param comFileTempDomain
      */
     void deleteFileTemp(String fileId, ComFileTempDomain comFileTempDomain);
+
+
+
+
+    /** TODO
+     * cron 혹은 Spring batch 활용
+     * pending 데이터 expire_dt 확인 후 invalid 상태 전환(invalid_dt update)
+     * @param comFileTempDomain
+     */
+    void deleteExpiredTemp(ComFileTempDomain comFileTempDomain);
+
+    /** TODO
+     * cron 혹은 Spring batch 활용
+     * invalid 데이터 invalid_dt 확인 후 물리 삭제(파일도 함께 삭제)
+     * @param comFileTempDomain
+     */
+    void deleteInvalidTemp(ComFileTempDomain comFileTempDomain);
+
+    /** TODO
+     * cron 혹은 Spring batch 활용
+     * valid 정상적으로 이관된 테이블의 데이터 삭제
+     * @param comFileTempDomain
+     */
+    void deleteCompletedTemp(ComFileTempDomain comFileTempDomain);
+
 
 }
