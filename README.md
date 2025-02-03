@@ -4,13 +4,14 @@ SpringBoot 4.3.1 + Gradle + Mybatis Web Application Template
 
 ## 2025.02.03
 ### 작업 예정
-1. 회원 저장 시 COM_FILE_TEMP -> COM_FILE 검증 및 저장 로직 처리
-2. 수정 시 기존 파일 업로드 불러오기 및 적용(dropzone.js)
+1. 수정 시 기존 파일 업로드 불러오기 및 적용(dropzone.js)
 
 ### 작업 내용
-1. interceptor 테스트 완료(운영 상황 적용 profile)
-2. 테스트 모듈(회원)에서의 파일 모듈 th:insert 예제 추가
-3. ComFileUploadInit.js를 통한 Dropzone 초기화 호출 작성
+1. 회원 저장 시 COM_FILE_TEMP -> COM_FILE 검증 및 저장 로직 처리
+2. interceptor 테스트 완료(운영 상황 적용 profile)
+3. 테스트 모듈(회원)에서의 파일 모듈 th:insert 예제 추가
+4. ComFileUploadInit.js를 통한 Dropzone 초기화 호출 작성
+5. BusinessException Exception발생 시 객체 전달 처리 추가
 
 ## 2025.01.31
 ### 작업 예정
