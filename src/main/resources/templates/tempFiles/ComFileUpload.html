@@ -4,7 +4,7 @@
 
 
 <!--<body>-->
-<div th:fragment="fileupload(fileDiv, fileId, fileType, fileSize,fileCnt, filePath)">
+<div th:fragment="fileupload(fileDiv, fileId, fileType, fileSize,fileCnt, filePath,fileList)">
     <div class="dropzone" th:id="${fileDiv}"></div>
 
     <!-- JS 파일 로드 -->
@@ -14,7 +14,7 @@
         Dropzone.autoDiscover = false;
         <!-- 파일 업로드를 위한 Dropzone 초기화 -->
         document.addEventListener("DOMContentLoaded", function () {
-            initDropzone('[[${fileDiv}]]', '[[${fileId}]]', '[[${fileType}]]', '[[${fileSize}]]', '[[${fileCnt}]]','[[${filePath}]]');
+            initDropzone('[[${fileDiv}]]', '[[${fileId}]]', '[[${fileType}]]', '[[${fileSize}]]', '[[${fileCnt}]]','[[${filePath}]]','[[${fileList}]]');
         });
     </script>
 

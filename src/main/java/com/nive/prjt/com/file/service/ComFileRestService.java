@@ -2,6 +2,7 @@ package com.nive.prjt.com.file.service;
 
 import com.nive.prjt.com.file.domain.ComFileDomain;
 import com.nive.prjt.com.file.domain.ComFileTempDomain;
+import com.nive.prjt.com.file.dto.ComFileDeleteRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -26,9 +27,9 @@ public interface ComFileRestService {
 
     /**
      * 본 테이블의 데이터를 논리삭제 처리한다.
-     * @param comFileTempDomain
+     * @param comFileDeleteRequest
      */
-    void deleteFile(ComFileTempDomain comFileTempDomain);
+    void deleteFile(String fileId, ComFileDeleteRequest comFileDeleteRequest);
 
 
     /**
@@ -37,6 +38,21 @@ public interface ComFileRestService {
      * @param comFileTempDomain
      */
     void deleteExpired(ComFileTempDomain comFileTempDomain);
+
+    /**
+     * 파일 정보 목록을 조회(json)
+     * @param fileId
+     * @return
+     */
+    public String selectFileMetaJsonList(String fileId);
+
+    /**
+     * 파일 단일 정보를 조회(json)
+     * @param fileId
+     * @param fileSeq
+     * @return
+     */
+    public String selectFileMetaJson(String fileId, int fileSeq);
 
     /**
      * 파일 정보 목록을 조회

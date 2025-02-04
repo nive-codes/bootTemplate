@@ -84,8 +84,8 @@ spring:
       on-profile: local
   file-storage:
     provider: local
-# TODO   본인 로컬 스토리지로 수정 후 작업하시면 됩니다
-    path: /Users/hosikchoi/IntelljProjects/personal/git/prjt/src/main/resources/upload
+# XXX   본인 로컬 스토리지로 수정 후 작업하시면 됩니다
+    path: /Users/nive/IntelljProjects/personal/git/prjt/src/main/resources/upload
 
 
 springdoc:
@@ -114,4 +114,4 @@ springdoc:
     show-extensions: true # 확장 정보 표시 여부
     show-common-extensions: true # 공통 확장 정보 표시 여부
     tags-sorter: alpha
-  packages-to-scan: com.nive.prjt.nive
+  packages-to-scan: com.nive.prjt

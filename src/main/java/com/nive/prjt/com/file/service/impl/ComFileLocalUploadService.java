@@ -46,10 +46,10 @@ public class ComFileLocalUploadService implements ComFileUploadService {
             log.info("파일 업로드 성공: {}", targetPath);
             return true;
         } catch (IOException e) {
-            log.error("파일 업로드 실패: {}", filePath, e);
+            log.error("파일 업로드 실패 IO Exception: {}", filePath, e);
             return false;
         } catch (Exception e) {
-            log.error("파일 업로드 실패: {}", filePath, e);
+            log.error("파일 업로드 실패 Exception: {}", filePath, e);
             return false;
         }
     }

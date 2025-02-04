@@ -18,7 +18,7 @@ import lombok.Getter;
 public class ApiResponse<T> {
     @Schema(description = "응답 코드", example = "SUCCESS")
     private final String code;
-    @Schema(description = "응답 메세지(커스텀될 수 있음", example = "SUCCESS")
+    @Schema(description = "응답 메세지(커스텀될 수 있음)", example = "SUCCESS")
     private final String message;
     @Schema(description = "응답 데이터", example = "{test : 1}")
     private final T data;

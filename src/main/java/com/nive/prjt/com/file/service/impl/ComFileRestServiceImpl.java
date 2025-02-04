@@ -1,7 +1,10 @@
 package com.nive.prjt.com.file.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nive.prjt.com.file.domain.ComFileDomain;
 import com.nive.prjt.com.file.domain.ComFileTempDomain;
+import com.nive.prjt.com.file.dto.ComFileDeleteRequest;
 import com.nive.prjt.com.file.service.*;
 import com.nive.prjt.config.exception.business.BusinessException;
 import com.nive.prjt.config.response.ApiCode;
@@ -34,6 +37,14 @@ public class ComFileRestServiceImpl implements  ComFileRestService {
 
     private final ComFileMetaService comFileMetaService;
     private final ComFileTempMetaService comFileTempMetaService;
+
+    //   성능 최적화 (싱글톤 유지 성능 최적화 + 쓰레드 세이프이기 때문에 여러 요청에서 공유
+    //   매번 객체 생성보다 재사용이 효율적
+    //   JSON 변환이 자주 일어나는 서비스라면 재사용이 좋음
+    //   큰 리소스를 잡아먹지 않음
+    //   한번 생성 후 계속 사용하는 것이 좋음.
+    //   TODO 위와 같은 이유라면 Spring Bean으로 등록 후 사용을 염두할 것.
+    private static final ObjectMapper objectMapper = new ObjectMapper(); // ObjectMapper 재사용
 
     @Override
     public void transferFile(String fileId,ComFileType comFileType, Long fileSize, int fileCnt, String filePath) {
@@ -97,8 +108,28 @@ public class ComFileRestServiceImpl implements  ComFileRestService {
     }
 
     @Override
-    public void deleteFile(ComFileTempDomain comFileTempDomain) {
-        comFileMetaService.deleteFileMeta(comFileTempDomain.getFileId(),comFileTempDomain.getFileSeq());
+    public void deleteFile(String fileId, ComFileDeleteRequest comFileDeleteRequest) {
+
+        if(Objects.isNull(comFileDeleteRequest.getFileId()) || comFileDeleteRequest.getFileId().isBlank()){
+            log.error("파일 삭제 : fileId : {} 요청 - comFileDeleteRequest file 데이터가 없습니다.", fileId);
+            throw new BusinessException("파일 삭제 fileId : "+ fileId +"는 요청되었으나 comFileTempDomain의 fileId가 존재하지 않습니다.",ApiCode.VALIDATION_FAILED);
+        }
+
+        if(!fileId.equals(comFileDeleteRequest.getFileId())){
+            log.error("파일 삭제 : fileId : {} 요청과 comFileDeleteRequest fileId : {} 데이터가 일치 하지 않습니다.", fileId, comFileDeleteRequest.getFileId());
+            throw new BusinessException("파일 삭제 fileId : "+ fileId +"는 요청되었으나 comFileTempDomain의 fileId가 존재하지 않습니다.",ApiCode.VALIDATION_FAILED);
+        }
+        ComFileDomain result = comFileMetaService.selectFileMeta(comFileDeleteRequest.getFileId(), comFileDeleteRequest.getFileSeq());
+        if(result == null){
+            log.error("COM_FILE 테이블 데이터 없음. file_id: {}, file_seq: {}", comFileDeleteRequest.getFileId(), comFileDeleteRequest.getFileSeq());
+
+            throw new BusinessException("COM_FILE 테이블의 데이터를 찾을 수 없습니다", ApiCode.NOT_FOUND);
+        }
+
+        /*업로드가 완료된 파일의 경우 메타 데이터만 논리 삭제 이후 추후 배치로 전체 파일 삭제*/
+        comFileMetaService.deleteFileMeta(comFileDeleteRequest.getFileId(), comFileDeleteRequest.getFileSeq());
+        log.info("TEMP 메타 데이터 및 파일 삭제 성공(DELETE). file_id: {}, file_seq: {}",
+                comFileDeleteRequest.getFileId(), comFileDeleteRequest.getFileSeq());
     }
 
     @Override
@@ -108,7 +139,39 @@ public class ComFileRestServiceImpl implements  ComFileRestService {
     }
 
     @Override
+    public String selectFileMetaJsonList(String fileId) {
+//        ObjectMapper objectMapper = new ObjectMapper();
+        try{
+            return objectMapper.writeValueAsString(comFileMetaService.selectFileMetaList(fileId));
+        }catch (JsonProcessingException e){
+            log.error("파일 목록 JSON 변환 에러 발생 JsonProcessingException ",e);
+
+            throw new BusinessException("파일 목록 JSON 변환 중 에러가 발생했습니다.",ApiCode.VALIDATION_FAILED);
+        }catch (Exception e){
+            log.error("파일 목록 JSON 변환 에러 발생 Exception ",e);
+            throw new BusinessException("파일 목록을 조회하는 중 오류가 발생했습니다.", ApiCode.INTERNAL_SERVER_ERROR);
+        }
+
+
+    }
+
+    @Override
+    public String selectFileMetaJson(String fileId, int fileSeq) {
+//        ObjectMapper objectMapper = new ObjectMapper();
+        try{
+            return objectMapper.writeValueAsString(comFileMetaService.selectFileMeta(fileId, fileSeq));
+        }catch (JsonProcessingException e){
+            log.error("단일 파일 JSON 변환 에러 발생 JsonProcessingException ",e);
+            throw new BusinessException("파일 목록 JSON 변환 중 에러가 발생했습니다.",ApiCode.VALIDATION_FAILED);
+        }catch (Exception e){
+            log.error("단일 파일 JSON 변환 에러 발생 Exception",e);
+            throw new BusinessException("단일 파일 정보를 조회하는 중 오류가 발생했습니다.", ApiCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
     public List<ComFileDomain> selectFileMetaList(String fileId) {
+
         return comFileMetaService.selectFileMetaList(fileId);
     }
 

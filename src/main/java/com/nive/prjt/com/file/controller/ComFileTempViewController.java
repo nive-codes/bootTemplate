@@ -1,7 +1,6 @@
 package com.nive.prjt.com.file.controller;
 
-import com.nive.prjt.com.file.domain.ComFileTempDomain;
-import com.nive.prjt.com.file.service.ComFileType;
+import com.nive.prjt.com.file.dto.ComFileTempDomainRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,14 +21,12 @@ public class ComFileTempViewController {
     @GetMapping("/dropZoneTest")
     public String dropZoneTest(Model model) {
         //   파일 업로드 제한 요건 처리
-        ComFileTempDomain comFileTempDomain = ComFileTempDomain.builder()
+        ComFileTempDomainRequest fileUploadInfo = ComFileTempDomainRequest.builder()
                 .fileType("IMAGE")
                 .fileSize(10L)
                 .filePath("tempTest").build();
 
-
-
-        model.addAttribute("fileUploadInfo", comFileTempDomain);
+        model.addAttribute("fileUploadInfo", fileUploadInfo);
         return "tempFiles/dropZoneTest";
     }
 }

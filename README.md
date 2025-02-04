@@ -2,6 +2,20 @@
 SpringBoot 4.3.1 + Gradle + Mybatis Web Application Template
 
 
+## 2025.02.04
+### 작업 예정
+1. mariaDB 테스트 및 s3 테스트
+2. 개인정보 파일의 경우 로그인한 본인만 삭제하도록 처리(security 적용)
+3. expired, invalid에 따른 batch처리
+4. MemberRestController 작성
+4. 도커 이미지 배포
+
+### 작업 내용
+1. 수정 시 기존 파일 업로드 불러오기 적용(dropzone.js) -> thymeleaf
+2. 로컬 파일 썸네일 불러오도록 처리 샘플(/api/files/thumb/dropzone/{fileId}/{fileSeq})
+3. 수정 화면 tempFile delete 및 comFile delete 구분 처리
+4. deleteRequest 등 dto구분 처리 및 테스트 예제 수정
+
 ## 2025.02.03
 ### 작업 예정
 1. 수정 시 기존 파일 업로드 불러오기 및 적용(dropzone.js)

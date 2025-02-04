@@ -29,8 +29,8 @@ public class CorsConfig {
                         .allowedOriginPatterns(
                                 "http://localhost",       // localhost
                                 "http://127.0.0.1",      // localhost (IP 형식)
-                                "http://192.168.*.*",    // 내부망 전체
-                                "http://외부망IP" // 외부망 IP
+                                "http://192.168.*.*"    // 내부망 전체
+//                                "http://외부망IP" // 외부망 IP
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용할 HTTP 메서드
                         .allowedHeaders("*") // 모든 헤더 허용

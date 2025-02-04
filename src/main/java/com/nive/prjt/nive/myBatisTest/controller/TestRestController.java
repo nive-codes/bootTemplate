@@ -19,7 +19,7 @@ import com.nive.prjt.config.response.ApiResponse;
  * @desc rest api (ResponseEntity) 용 module 작성
  * @since 2025-01-11
  */
-@Tag(name = "01.Test CRUD Controller", description = "테스트용 CRUD 컨트롤러입니다.")
+@Tag(name = "02.Test CRUD Controller", description = "테스트용 CRUD 컨트롤러입니다.")
 @RestController
 @RequestMapping("/testApi")
 @RequiredArgsConstructor

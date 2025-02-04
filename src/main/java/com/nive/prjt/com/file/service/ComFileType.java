@@ -1,5 +1,7 @@
 package com.nive.prjt.com.file.service;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -12,10 +14,18 @@ import java.util.Set;
  * @ComFileService.checkValidation에서 검증
  * @since 2025-01-17
  */
+@Schema(description = "00-1. 파일 validation 체크용 타입 정보 - ComFileTempDomain의 fileType과 연계정보")
 public enum ComFileType {
+    @Schema(description = "이미지 파일 - IMAGE인 경우 해당 파일만 업로드 가능", example = "jpg, jpeg, png, gif, bmp")
     IMAGE(Set.of("jpg", "jpeg", "png", "gif", "bmp")),
+
+    @Schema(description = "문서 파일", example = "pdf, doc, docx, txt, hwp, hwpx, xls, xlsx")
     DOCUMENT(Set.of("pdf", "doc", "docx", "txt", "hwp", "hwpx", "xls", "xlsx")),
+
+    @Schema(description = "비디오 파일", example = "mp4, avi, mkv")
     VIDEO(Set.of("mp4", "avi", "mkv")),
+
+    @Schema(description = "오디오 파일", example = "mp3, wav, aac")
     AUDIO(Set.of("mp3", "wav", "aac"));
 
     /*list보다 속도가 더 빠른 Set. 동일하게 Collcations 인터페이스를 상속받지만 저장 방식 및 동작 상이*/

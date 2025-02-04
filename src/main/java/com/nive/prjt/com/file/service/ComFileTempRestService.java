@@ -1,6 +1,8 @@
 package com.nive.prjt.com.file.service;
 
 import com.nive.prjt.com.file.domain.ComFileTempDomain;
+import com.nive.prjt.com.file.dto.ComFileTempDeleteRequest;
+import com.nive.prjt.com.file.dto.ComFileTempDomainRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -15,13 +17,14 @@ public interface ComFileTempRestService {
      * @param files 업로드한 파일
      * @Param comFileTempDomain COmFileTempDomain 객체
      */
-    String uploadFileTemp(MultipartFile[] files, ComFileTempDomain comFileTempDomain);
+//    String uploadFileTemp(MultipartFile[] files, ComFileTempDomain comFileTempDomain);
+    ComFileTempDomain uploadFileTemp(MultipartFile[] files, ComFileTempDomainRequest comFileTempDomainRequest);
 
     /** 사용자가 삭제 버튼
      * 임시 테이블의 데이터 삭제 및 실제 파일 삭제(임시 파일까지 삭제처리를 한다)
-     * @param comFileTempDomain
+     * @param comFileTempDeleteRequest
      */
-    void deleteFileTemp(String fileId, ComFileTempDomain comFileTempDomain);
+    void deleteFileTemp(String fileId, ComFileTempDeleteRequest comFileTempDeleteRequest);
 
 
 

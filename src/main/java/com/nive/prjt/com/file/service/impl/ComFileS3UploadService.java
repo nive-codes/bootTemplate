@@ -1,6 +1,8 @@
 package com.nive.prjt.com.file.service.impl;
 
 import com.nive.prjt.com.file.service.ComFileUploadService;
+import com.nive.prjt.config.exception.business.BusinessException;
+import com.nive.prjt.config.response.ApiCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,7 +40,7 @@ public class ComFileS3UploadService implements ComFileUploadService {
     @Override
     public boolean uploadFile(MultipartFile file, String filePath, String fileName) {
 
-        log.error("s3Client.uploadFile bucket name {}" +bucketName);
+        log.warn("s3Client.uploadFile bucket name {}" +bucketName);
 
 
         try {
@@ -72,7 +74,7 @@ public class ComFileS3UploadService implements ComFileUploadService {
             log.info("File downloaded from S3: {}", filePath);
             return tempFile;
         } catch (Exception e) {
-            log.error("Failed to download file from S3: {}", e.getMessage());
+            log.error("파일 다운로드 중 오류가 발생했습니다. filePath :  {}", filePath, e);
             return null;
         }
     }
@@ -86,10 +88,11 @@ public class ComFileS3UploadService implements ComFileUploadService {
                     .build();
 
             s3Client.deleteObject(deleteObjectRequest);
-            log.info("File deleted from S3: {}", filePath);
+            log.info("s3파일 삭제 경로: {}", filePath);
             return true;
         } catch (Exception e) {
-            log.error("Failed to delete file from S3: {}", e.getMessage());
+            log.info("s3파일 삭제 경로 오류 발생: {}", filePath);
+            log.error("S3 파일 삭제 중 오류가 발생했습니다. : {}", e);
             return false;
         }
     }
@@ -105,8 +108,8 @@ public class ComFileS3UploadService implements ComFileUploadService {
             s3Client.getObject(getObjectRequest);
             return true; // 파일이 존재하면 예외 없이 처리됨
         } catch (Exception e) {
-            log.warn("File does not exist in S3: {}", filePath);
-            return false;
+            log.error("File does not exist in S3: {}", filePath, e);
+            throw new BusinessException("S3 파일 조회 중 오류가 발생했습니다.", ApiCode.VALIDATION_FAILED);
         }
     }
 

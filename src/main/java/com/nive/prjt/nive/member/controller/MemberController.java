@@ -70,11 +70,11 @@ public class MemberController {
             model.addAttribute("message","회원 정보가 없습니다.");
             return "member/searchForm";
         }
-        List<ComFileDomain> fileMetaList = comFileRestService.selectFileMetaList(memberDomain.getFileId());
-        List<ComFileDomain> fileMetaList2 = comFileRestService.selectFileMetaList(memberDomain.getFileId2());
+        String fileJsonList = comFileRestService.selectFileMetaJsonList(memberDomain.getFileId());
+        String fileJsonList2 =  comFileRestService.selectFileMetaJsonList(memberDomain.getFileId2());
 
-        model.addAttribute("fileMetaList",fileMetaList);
-        model.addAttribute("fileMetaList2",fileMetaList2);
+        model.addAttribute("fileMetaList",fileJsonList);
+        model.addAttribute("fileMetaList2",fileJsonList2);
         model.addAttribute("formFlag","Y");
         model.addAttribute("memberDomain",memberDomain);
         return "member/memberForm";

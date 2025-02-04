@@ -1,6 +1,8 @@
 package com.nive.prjt.com.file.service.impl;
 
 import com.nive.prjt.com.file.domain.ComFileTempDomain;
+import com.nive.prjt.com.file.dto.ComFileTempDeleteRequest;
+import com.nive.prjt.com.file.dto.ComFileTempDomainRequest;
 import com.nive.prjt.com.file.service.ComFileTempMetaService;
 import com.nive.prjt.com.file.service.ComFileTempRestService;
 import com.nive.prjt.com.file.service.ComFileType;
@@ -34,28 +36,29 @@ public class ComFileTempRestServiceImpl implements ComFileTempRestService {
 
 
     @Override
-    public String uploadFileTemp(MultipartFile[] files, ComFileTempDomain comFileTempDomain) {
+    public ComFileTempDomain uploadFileTemp(MultipartFile[] files, ComFileTempDomainRequest comFileTempDomainRequest) {
 
         /*upload 처리 전 파일 request 검증*/
-        validateRequest(files,comFileTempDomain);
+        validateRequest(files,comFileTempDomainRequest);
 
-        String fileId = comFileTempDomain.getFileId();
-
+        String fileId = comFileTempDomainRequest.getFileId();
+        ComFileTempDomain comFileTempDomain = new ComFileTempDomain();
         //   파일 반복문 처리
         for (MultipartFile file : files) {
 
             //   파일 검증 완료 후
             /*TODO 잘못된 파일인 경우 에러메세지 세분화 처리 - ex) document인데 img파일 업로드 했는 경우 세분화된 메세지 안내*/
-            if(validateFile(file,comFileTempDomain.getFileType(), comFileTempDomain.getFileSize())){
+            if(validateFile(file,comFileTempDomainRequest.getFileType(), comFileTempDomainRequest.getFileSize())){
 
                 //   comFileTempDomain  생성
-                comFileTempDomain = createFileTempDomain(file, comFileTempDomain);
+                comFileTempDomain = createFileTempDomain(file, comFileTempDomainRequest);
 
                 //   실제로 파일 업로드
                 if (comFileUploadService.uploadFile(file, comFileTempDomain.getFilePath(),comFileTempDomain.getFileUpldNm())) {
 
                     //파일 데이터 저장
                     fileId = processFileId(comFileTempDomain);
+                    comFileTempDomain.setFileId(fileId);
 
                 } else {
                     log.error("물리적 파일 업로드 실패 : {}", file.getOriginalFilename());
@@ -66,25 +69,26 @@ public class ComFileTempRestServiceImpl implements ComFileTempRestService {
                 throw new BusinessException("파일 업로드가 정상적으로 처리되지 못했습니다.",ApiCode.INTERNAL_SERVER_ERROR);
             }
         }
-        return fileId ;
+        return comFileTempDomain;
     }
 
     @Override
-    public void deleteFileTemp(String fileId, ComFileTempDomain comFileTempDomain) {
+    public void deleteFileTemp(String fileId, ComFileTempDeleteRequest comFileTempDeleteRequest) {
         /*file_id 와 file_seq를 가지고 파일 임시 테이블 조회 경로 확인 -> 파일 삭제 -> 데이터 삭제*/
 
-        if(Objects.isNull(comFileTempDomain.getFileId()) || comFileTempDomain.getFileId().isBlank()){
+        if(Objects.isNull(comFileTempDeleteRequest.getFileId()) || comFileTempDeleteRequest.getFileId().isBlank()){
             log.error("파일 삭제 : fileId : {} 요청 - comFileTempDomain file 데이터가 없습니다.", fileId);
             throw new BusinessException("파일 삭제 fileId : "+ fileId +"는 요청되었으나 comFileTempDomain의 fileId가 존재하지 않습니다.",ApiCode.VALIDATION_FAILED);
         }
 
-        if(!fileId.equals(comFileTempDomain.getFileId())){
-            log.error("파일 삭제 : fileId : {} 요청과 comFileTempDomain fileId : {} 데이터가 일치 하지 않습니다.", fileId, comFileTempDomain.getFileId());
+        if(!fileId.equals(comFileTempDeleteRequest.getFileId())){
+            log.error("파일 삭제 : fileId : {} 요청과 comFileTempDomain fileId : {} 데이터가 일치 하지 않습니다.", fileId, comFileTempDeleteRequest.getFileId());
             throw new BusinessException("파일 삭제 fileId : "+ fileId +"는 요청되었으나 comFileTempDomain의 fileId가 존재하지 않습니다.",ApiCode.VALIDATION_FAILED);
         }
 
 
         //   file_id와 file_seq에 해당하는 데이터 조회
+        ComFileTempDomain comFileTempDomain = ComFileTempDomain.builder().fileId(fileId).fileSeq(comFileTempDeleteRequest.getFileSeq()).build();
         ComFileTempDomain result = comFileTempMetaService.selectFileTempMeta(comFileTempDomain.getFileId(), comFileTempDomain.getFileSeq());
 
         if(result == null){
@@ -136,16 +140,16 @@ public class ComFileTempRestServiceImpl implements ComFileTempRestService {
     /**
      * 파일 upload 전 사전 검증 처리
      * @param files
-     * @param comFileTempDomain
+     * @param comFileTempDomainRequest
      */
-    private void validateRequest(MultipartFile[] files, ComFileTempDomain comFileTempDomain) {
+    private void validateRequest(MultipartFile[] files, ComFileTempDomainRequest comFileTempDomainRequest) {
         if (files == null || files.length == 0) {
             log.error("업로드할 파일이 없습니다.");
             throw new BusinessException("존재하지 않는 파일입니다.","NOT_FOUND", HttpStatus.NOT_FOUND);
         }
 
-        if(comFileTempDomain == null){
-            log.error("업로드 요청된 comFileTempDomain이 존재하지 않습니다.");
+        if(comFileTempDomainRequest == null){
+            log.error("업로드 요청된 comFileTempDomainRequest가 존재하지 않습니다.");
             throw new BusinessException("파일 데이터 comFileTempDomain이 없습니다.","NOT_FOUND", HttpStatus.NOT_FOUND);
         }
     }
@@ -262,14 +266,15 @@ public class ComFileTempRestServiceImpl implements ComFileTempRestService {
     /**
      * 변수로 받아온 파라미터를 토대로 ComFileTempDomain 생성
      * @param file
-     * @param comFileTempDomain
+     * @param comFileTempDomainRequest
      * @return
      */
-    private ComFileTempDomain createFileTempDomain(MultipartFile file,ComFileTempDomain comFileTempDomain) {
+    private ComFileTempDomain createFileTempDomain(MultipartFile file,ComFileTempDomainRequest comFileTempDomainRequest) {
 //        ComFileDomain comFileDomain = new ComFileDomain();
-
-        comFileTempDomain.setFilePath(comFileTempDomain.getFilePath());    //파일 경로(모듈 명)
-        comFileTempDomain.setFileModule(comFileTempDomain.getFilePath());    //파일 경로(모듈 명)
+        ComFileTempDomain comFileTempDomain = new ComFileTempDomain();
+        comFileTempDomain.setFileId(comFileTempDomainRequest.getFileId());
+        comFileTempDomain.setFilePath(comFileTempDomainRequest.getFilePath());    //파일 경로(모듈 명)
+        comFileTempDomain.setFileModule(comFileTempDomainRequest.getFilePath());    //파일 경로(모듈 명)
         comFileTempDomain.setFileOrignNm(file.getOriginalFilename());   //실제 파일 업로드명
         comFileTempDomain.setFileSize(file.getSize()); //파일 사이즈
         comFileTempDomain.setFileUpldNm(UUID.randomUUID().toString() + getFileSuffix(file));    //고유한 파일name 값 처리
