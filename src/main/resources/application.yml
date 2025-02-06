@@ -5,7 +5,7 @@
 spring:
   profiles:
     group:
-      dev: local
+      dev: s3
       prod: local
     active: dev # 기본 활성화 프로파일 (dev 그룹)
   # 생성 모듈의 domain 패키지 지정
@@ -72,9 +72,9 @@ spring:
     activate:
       on-profile: s3
   file-storage:
-    bucket: test
-    access-key: 1234
-    secret-key: 1234
+    bucket: boracms3
+    access-key: AKIA3BWB36VBM7ZWYVWA
+    secret-key: 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
     region: ap-northeast-2
 
 ---  #LOCAL Storage Profile upload

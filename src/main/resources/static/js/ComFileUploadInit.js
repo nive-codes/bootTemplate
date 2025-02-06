@@ -36,53 +36,56 @@ function initDropzone(upldFileDiv, upldFileId, upldFileType, upldFileSize,fileCn
             };
         },
         init: function() {
-            console.log("fileList : " + fileList);
+            // console.log("fileList : " + fileList);
+            if(fileList != null && fileList.length > 0){
+                const decodedFileList = decodeHtmlEntities(fileList);
+                const parsedFileList = JSON.parse(decodedFileList);
+                console.log("parsedFileList : " +parsedFileList);
 
+                let self = this;  // self에 this(Dropzone 인스턴스) 저장
 
-            const decodedFileList = decodeHtmlEntities(fileList);
-            const parsedFileList = JSON.parse(decodedFileList);
-            console.log("parsedFileList : " +parsedFileList);
+                // 기존 파일을 Dropzone에 추가(mockFile 처리)
+                /*https://nicescript.tistory.com/17 참조*/
+                // 기존 파일 추가
+                if (Array.isArray(parsedFileList)) {
+                    parsedFileList.forEach(function(file) {
+                        var mockFile = {
+                            name: file.fileOrignNm,
+                            size: file.fileSize,
+                            fileId: file.fileId,
+                            fileSeq: file.fileSeq,
+                            fileOrd: file.fileOrd,
+                            fileStat : 'COMP'
+                            // url: '/api/files/upload/' + file.fileId + '/' + file.fileSeq // URL은 실제 파일 경로로 수정
+                        };
 
+                        self.emit("addedfile", mockFile);  // Dropzone에 파일 추가
+                        self.emit("complete", mockFile);   // 파일 업로드 완료 처리
 
-            let self = this;  // self에 this(Dropzone 인스턴스) 저장
+                        // 서버에서 파일 조회 후 미리보기 적용
+                        if(upldFileType === 'IMAGE'){
+                            console.log(mockFile.fileId, mockFile.fileSeq);
+                            fetch('/api/files/thumb/dropzone/'+mockFile.fileId+'/'+mockFile.fileSeq)
+                                .then(response => response.blob()) // 바이너리 데이터 변환
+                                .then(blob => {
+                                    let reader = new FileReader();
+                                    reader.onload = function(event) {
+                                        self.emit("thumbnail", mockFile, event.target.result); // 썸네일 적용
+                                    };
+                                    reader.readAsDataURL(blob);
+                                })
+                                .catch(error => console.error("파일 불러오기 실패:", error));
+                        }
 
-            // 기존 파일을 Dropzone에 추가(mockFile 처리)
-            /*https://nicescript.tistory.com/17 참조*/
-            // 기존 파일 추가
-            if (Array.isArray(parsedFileList)) {
-                parsedFileList.forEach(function(file) {
-                    var mockFile = {
-                        name: file.fileOrignNm,
-                        size: file.fileSize,
-                        fileId: file.fileId,
-                        fileSeq: file.fileSeq,
-                        fileOrd: file.fileOrd,
-                        fileStat : 'COMP'
-                        // url: '/api/files/upload/' + file.fileId + '/' + file.fileSeq // URL은 실제 파일 경로로 수정
-                    };
-
-                    self.emit("addedfile", mockFile);  // Dropzone에 파일 추가
-                    self.emit("complete", mockFile);   // 파일 업로드 완료 처리
-
-                    // 서버에서 파일 조회 후 미리보기 적용
-                    if(upldFileType === 'IMAGE'){
-                        console.log(mockFile.fileId, mockFile.fileSeq);
-                        fetch('/api/files/thumb/dropzone/'+mockFile.fileId+'/'+mockFile.fileSeq)
-                            .then(response => response.blob()) // 바이너리 데이터 변환
-                            .then(blob => {
-                                let reader = new FileReader();
-                                reader.onload = function(event) {
-                                    self.emit("thumbnail", mockFile, event.target.result); // 썸네일 적용
-                                };
-                                reader.readAsDataURL(blob);
-                            })
-                            .catch(error => console.error("파일 불러오기 실패:", error));
-                    }
-
-                });
-            } else {
-                console.error("parsedFileList 배열이 아닙니다.", parsedFileList);
+                    });
+                } else {
+                    console.error("parsedFileList 배열이 아닙니다.", parsedFileList);
+                }
             }
+
+
+
+
 
             this.on("success", function(file, response) {
                 console.log("파일 업로드 성공:", response);
