@@ -72,10 +72,10 @@ spring:
     activate:
       on-profile: s3
   file-storage:
-    bucket: boracms3
-    access-key: AKIA3BWB36VBM7ZWYVWA
-    secret-key: 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
-    region: ap-northeast-2
+    bucket: test
+    access-key:
+    secret-key:
+    region:
 
 ---  #LOCAL Storage Profile upload
 spring:
