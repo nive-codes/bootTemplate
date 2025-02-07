@@ -5,17 +5,22 @@ import com.nive.prjt.config.exception.business.BusinessException;
 import com.nive.prjt.config.response.ApiCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * @author nive
@@ -73,6 +78,25 @@ public class ComFileS3UploadService implements ComFileUploadService {
             s3Client.getObject(getObjectRequest, Path.of(tempFile.getPath()));
             log.info("File downloaded from S3: {}", filePath);
             return tempFile;
+        } catch (Exception e) {
+            log.error("파일 다운로드 중 오류가 발생했습니다. filePath :  {}", filePath, e);
+            return null;
+        }
+    }
+
+    @Override
+    public Resource selectFileStream(String filePath) {
+        try {
+            GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(filePath)
+                    .build();
+
+            // S3에서 파일을 직접 스트리밍
+            ResponseInputStream<GetObjectResponse> s3Object = s3Client.getObject(getObjectRequest);
+
+            log.info("File streamed from S3: {}", filePath);
+            return new InputStreamResource(s3Object); // InputStreamResource 반환
         } catch (Exception e) {
             log.error("파일 다운로드 중 오류가 발생했습니다. filePath :  {}", filePath, e);
             return null;

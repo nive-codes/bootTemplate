@@ -3,6 +3,8 @@ package com.nive.prjt.com.file.service;
 import com.nive.prjt.com.file.domain.ComFileDomain;
 import com.nive.prjt.com.file.domain.ComFileTempDomain;
 import com.nive.prjt.com.file.dto.ComFileDeleteRequest;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -68,6 +70,14 @@ public interface ComFileRestService {
      * @return
      */
     public ComFileDomain selectFileMeta(String fileId, int fileSeq);
+
+    /**
+     * 파일 정보를 stream으로 return
+     * @param fileId
+     * @param fileSeq
+     * @return
+     */
+    public ComFileDomain fileBinaryStream(String fileId, Integer fileSeq);
 
 
 }

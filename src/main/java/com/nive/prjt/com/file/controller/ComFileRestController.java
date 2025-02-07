@@ -69,22 +69,16 @@ public class ComFileRestController  {
     }
 
 
-    //file ID, file seq를 파라미터로 받아서 처리(썸네일 생성)
-    @Operation(summary = "[dropzone+local] dropzone활용 시 이미지 썸네일", description = "저장된 파일 데이터를 토대로 썸네일이 생성됩니다(서버작동안함 주의)")
+    //file ID, file seq를 파라미터로 받아서 처리(파일 전달)
+    @Operation(summary = "[dropzone+local] dropzone활용 시 이미지 썸네일", description = "저장된 파일 데이터를 토대로 썸네일이 생성됩니다(서버작동안함 주의)-파일리턴이므로 주의")
     @GetMapping("/thumb/dropzone/{fileId}/{fileSeq}")
     public ResponseEntity<Resource> dropzone(@PathVariable String fileId, @PathVariable Integer fileSeq
 
     ) {
-        ComFileDomain fileDomain = comFileRestService.selectFileMeta(fileId, fileSeq);
-
-        // 파일 리소스 반환 (이미지 미리보기를 위해)
-        Resource fileResource = new FileSystemResource("/Users/hosikchoi/IntelljProjects/personal/git/prjt/src/main/resources/upload/"+fileDomain.getFilePath()+"/"+fileDomain.getFileUpldNm());
-        MediaType mediaType = MediaTypeFactory.getMediaType(fileResource)
-                .orElse(MediaType.APPLICATION_OCTET_STREAM);
-
+        ComFileDomain fileDomain = comFileRestService.fileBinaryStream(fileId, fileSeq);
         return ResponseEntity.ok()
-                .contentType(mediaType)
-                .body(fileResource);
+                .contentType(fileDomain.getMediaType())
+                .body(fileDomain.getFileResource());
 
     }
 }

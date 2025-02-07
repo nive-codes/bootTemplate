@@ -10,6 +10,20 @@ SpringBoot 4.3.1 + Gradle + Mybatis + (Rest API or Thymeleaf) Web Application Te
  
 ### 작업 내용
 1. mariaDB 테스트 및 s3 테스트 중
+2. 파일 Resource service로 구현, local과 s3 공통으로 활용
+
+
+## 2025.02.05
+### 작업 예정
+
+2. 개인정보 파일의 경우 로그인한 본인만 삭제하도록 처리(security 적용)
+3. expired, invalid에 따른 batch처리
+4. MemberRestController 작성
+4. 테스트 진행 중
+
+### 작업 내용
+1. 파일 return Resource 메서드 추가(stream방식으로 미리보기 구현용)
+2. mariaDB 테스트 및 s3 테스트
 
 
 

@@ -10,11 +10,17 @@ import com.nive.prjt.config.exception.business.BusinessException;
 import com.nive.prjt.config.response.ApiCode;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
+import org.springframework.http.MediaTypeFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -37,6 +43,7 @@ public class ComFileRestServiceImpl implements  ComFileRestService {
 
     private final ComFileMetaService comFileMetaService;
     private final ComFileTempMetaService comFileTempMetaService;
+    private final ComFileUploadService comFileUploadService;
 
     //   성능 최적화 (싱글톤 유지 성능 최적화 + 쓰레드 세이프이기 때문에 여러 요청에서 공유
     //   매번 객체 생성보다 재사용이 효율적
@@ -178,6 +185,28 @@ public class ComFileRestServiceImpl implements  ComFileRestService {
     @Override
     public ComFileDomain selectFileMeta(String fileId, int fileSeq) {
         return comFileMetaService.selectFileMeta(fileId, fileSeq);
+    }
+
+    @Override
+    public ComFileDomain fileBinaryStream(String fileId, Integer fileSeq) {
+        ComFileDomain fileDomain = comFileMetaService.selectFileMeta(fileId, fileSeq);
+
+        if(fileDomain == null){
+            log.error("잘못된 파일 stream 요청 : {}, file Seq : {}",fileId,fileSeq);
+            throw new BusinessException("파일 정보를 찾을 수 없습니다. 잘못된 파일 파라미터 입니다.");
+        }
+
+//        File selectFile = comFileUploadService.selectFile(fileDomain.getFilePath() + "/" + fileDomain.getFileUpldNm());
+
+        Resource fileResource = comFileUploadService.selectFileStream(fileDomain.getFilePath() + "/" + fileDomain.getFileUpldNm());
+        if(fileDomain == null){
+            log.error("저장되어 있는 파일이 없습니다 : {}, file Seq : {}",fileId,fileSeq);
+            throw new BusinessException("저장된 파일이 없습니다.");
+        }
+
+        fileDomain.setMediaType(MediaTypeFactory.getMediaType(fileResource).orElse(MediaType.APPLICATION_OCTET_STREAM));
+        fileDomain.setFileResource(fileResource);
+        return fileDomain;
     }
 
 

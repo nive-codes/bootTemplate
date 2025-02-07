@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
 
 import java.util.Date;
 
@@ -87,4 +89,12 @@ public class ComFileDomain {
 
     @Schema(description = "파일 삭제 시 IP 주소", example = "192.168.0.3")
     private String delIpAddr;
+
+    @Schema(description = "파일 stream용 fileResource")
+    private Resource fileResource;
+
+    @Schema(description = "파일 media 타입")
+    private MediaType mediaType;
+
+
 }

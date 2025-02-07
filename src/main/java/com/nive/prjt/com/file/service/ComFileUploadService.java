@@ -1,5 +1,7 @@
 package com.nive.prjt.com.file.service;
 
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -29,6 +31,13 @@ public interface ComFileUploadService {
      * @return
      */
     File selectFile(String filePath);
+
+    /**
+     * 파일을 스트리밍 방식으로 처리
+     * @param filePath
+     * @return
+     */
+    Resource selectFileStream(String filePath);
 
     /**
      * 경로에 존재하는 실제 파일을 삭제하는 메서드
