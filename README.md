@@ -2,7 +2,7 @@
 SpringBoot 4.3.1 + Gradle + Mybatis + (Rest API or Thymeleaf) Web Application Template
 
 
-## 2025.02.05
+## 2025.02.07
 ### 작업 예정
 1. MemberRestController 작성 및 dto 구분 처리
 2. 개인정보 파일의 경우 로그인한 본인만 삭제하도록 처리(security 적용)
