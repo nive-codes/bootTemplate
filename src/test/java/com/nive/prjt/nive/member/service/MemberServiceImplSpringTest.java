@@ -71,7 +71,7 @@ class MemberServiceImplSpringTest {
         MockMultipartHttpServletRequest request = new MockMultipartHttpServletRequest();
         // Act & Assert
         BusinessException exception = assertThrows(BusinessException.class, () ->
-                memberService.updateMember(member, request)
+                memberService.updateMember(member)
         );
         assertEquals("회원ID가 없으므로 목록에서 다시 선택 후, 수정해주세요.", exception.getMessage());
     }

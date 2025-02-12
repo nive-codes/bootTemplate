@@ -2,6 +2,18 @@
 SpringBoot 4.3.1 + Gradle + Mybatis + (Rest API or Thymeleaf) Web Application Template
 
 
+## 2025.02.12
+### 작업 예정
+1. member 관련 return dto 구분 처리
+2. 개인정보 파일의 경우 로그인한 본인만 삭제하도록 처리(security 적용)
+3. expired, invalid에 따른 batch처리
+
+### 작업 내용
+1. mariaDB 테스트 및 s3 테스트 완료
+2. 파일 Resource관련(dropzone 썸네일) service로 구현, local과 s3 공통으로 활용
+3. MemberRestController 작성
+4. mvc 일 때 bindingResult 관련 오류 메세지 수정 처리
+
 ## 2025.02.07
 ### 작업 예정
 1. MemberRestController 작성 및 dto 구분 처리

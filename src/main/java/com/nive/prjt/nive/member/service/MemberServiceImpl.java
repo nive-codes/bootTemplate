@@ -47,7 +47,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public String insertMember(MemberDomain member, MultipartHttpServletRequest request) {
+    public String insertMember(MemberDomain member) {
 
         /*파일 검증 로직 처리*/
        comFileRestService.transferFile(member.getFileId(),ComFileType.IMAGE,10L,5,"member");
@@ -62,7 +62,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void updateMember(MemberDomain member, MultipartHttpServletRequest request) {
+    public void updateMember(MemberDomain member) {
 
         if(Objects.isNull(member.getMemberId()) || member.getMemberId().isBlank()){
             throw new BusinessException("회원ID가 없으므로 목록에서 다시 선택 후, 수정해주세요.","/member/updateForm");

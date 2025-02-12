@@ -17,9 +17,9 @@ public interface MemberService {
 
     boolean existMember(String nm);
 
-    String insertMember(MemberDomain member, MultipartHttpServletRequest request);
+    String insertMember(MemberDomain member);
 
-    void updateMember(MemberDomain member, MultipartHttpServletRequest request);
+    void updateMember(MemberDomain member);
 
     void deleteMember(String memberId);
 

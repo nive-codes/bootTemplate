@@ -1,9 +1,6 @@
 package com.nive.prjt.nive.member.controller;
 
-import com.nive.prjt.com.file.domain.ComFileDomain;
 import com.nive.prjt.com.file.service.ComFileRestService;
-import com.nive.prjt.com.file.service.ComFileType;
-import com.nive.prjt.config.response.ApiCode;
 import com.nive.prjt.nive.member.domain.MemberDomain;
 import com.nive.prjt.nive.member.service.MemberService;
 import jakarta.validation.Valid;
@@ -21,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author nive
@@ -48,14 +46,20 @@ public class MemberController {
     public String insert(@Valid MemberDomain memberDomain, BindingResult bindingResult, MultipartHttpServletRequest request, Model model,
                          RedirectAttributes redirectAttributes) {
 
+
         if(bindingResult.hasErrors()) {
             model.addAttribute("formFlag","Y"); //insert flag
             model.addAttribute("memberDomain",memberDomain);
-            model.addAttribute("errorMessage", bindingResult.getAllErrors().get(0).getDefaultMessage());
+            List<String> errorMessages = bindingResult.getFieldErrors()
+                    .stream()
+                    .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                    .collect(Collectors.toList());
+
+            model.addAttribute("errorMessage", errorMessages);
             return "member/memberForm";
         }
 
-        memberService.insertMember(memberDomain,request);
+        memberService.insertMember(memberDomain);
         redirectAttributes.addFlashAttribute("message","등록되었습니다.");
 
         return "redirect:/member/searchForm";
@@ -85,11 +89,16 @@ public class MemberController {
 
         if(bindingResult.hasErrors()) {
             model.addAttribute("formFlag","Y"); //insert flag
-            model.addAttribute("errorMessage", bindingResult.getAllErrors().get(0).getDefaultMessage());
+            List<String> errorMessages = bindingResult.getFieldErrors()
+                    .stream()
+                    .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                    .collect(Collectors.toList());
+
+            model.addAttribute("errorMessage", errorMessages);
             return "member/memberForm";
         }
 
-        memberService.updateMember(memberDomain,request);
+        memberService.updateMember(memberDomain);
 
 
         model.addAttribute("formFlag","N"); //update flag
