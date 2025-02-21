@@ -1,0 +1,7 @@
+.gradle
+.gitattributes
+.gitignore
+/node_modules
+*.jar
+*.war
+*.zip
